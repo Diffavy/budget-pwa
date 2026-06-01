@@ -27,9 +27,66 @@ function App() {
       setAmount("");
     }
   };
+
+  const baseButtonStyle = {
+    all: "unset",
+    cursor: "pointer",
+    fontSize: "2rem",
+    padding: "15px",
+    borderRadius: "10px",
+    margin: "10px",
+  };
+
+  const flowTypes = ["daily", "subscription", "one-off"];
+
   return (
     <>
       <form onSubmit={handleSubmit}>
+        <div>
+          <button
+            type="button"
+            onClick={() => setType("income")}
+            style={{
+              ...baseButtonStyle,
+              color: type === "income" ? "white" : "black",
+              backgroundColor: type === "income" ? "green" : "grey",
+              fontWeight: type === "income" ? "bold" : "normal",
+            }}
+          >
+            Income
+          </button>
+          <button
+            type="button"
+            onClick={() => setType("expense")}
+            style={{
+              ...baseButtonStyle,
+              color: type === "expense" ? "white" : "black",
+              backgroundColor: type === "expense" ? "red" : "grey",
+              fontWeight: type === "expense" ? "bold" : "normal",
+            }}
+          >
+            Expense
+          </button>
+        </div>
+        <div className="flowTypeSelector">
+          {type === "expense" &&
+            flowTypes.map((ft) => (
+              <button
+                key={ft}
+                type="button"
+                onClick={() => setFlowType(ft)}
+                style={{
+                  ...baseButtonStyle,
+                  display: "inline-block",
+                  backgroundColor: flowType === ft ? "white" : "grey",
+                  fontWeight: flowType === ft ? "bold" : "normal",
+                  color: "black",
+                }}
+              >
+                {ft}
+              </button>
+            ))}
+        </div>
         <input
           type="text"
           value={amount}
