@@ -16,7 +16,7 @@ function App() {
           amount: parseFloat(amount),
           type: type,
           flow_type: flowType,
-          category: category || type === "income" ? "income" : "general", // If category is empty and type is not "income", implies expense, so set category to "general"
+          category: category || (type === "income" ? "income" : "general"), // If category is empty and type is not "income", implies expense, so set category to "general"
         },
       ]);
 
@@ -39,13 +39,25 @@ function App() {
 
   const flowTypes = ["daily", "subscription", "one-off"];
 
+  const categories = {
+    daily: ["food", "transportation", "entertainment"],
+    subscription: ["netflix", "gym", "spotify"],
+    "one-off": ["electronics", "furniture", "clothing"],
+  };
+
+  const currentCategory = flowType ? categories[flowType] : [];
+
   return (
     <>
       <form onSubmit={handleSubmit}>
         <div>
           <button
             type="button"
-            onClick={() => setType("income")}
+            onClick={() => {
+              setType("income");
+              setFlowType(""); // Reset flow type when switching to income
+              setCategory(""); // Reset category when switching to income
+            }}
             style={{
               ...baseButtonStyle,
               color: type === "income" ? "white" : "black",
@@ -57,7 +69,11 @@ function App() {
           </button>
           <button
             type="button"
-            onClick={() => setType("expense")}
+            onClick={() => {
+              setType("expense");
+              setFlowType(flowTypes[0]); // Set default flow type to "daily" when switching to expense
+              setCategory(""); // Reset category when switching to expense
+            }}
             style={{
               ...baseButtonStyle,
               color: type === "expense" ? "white" : "black",
@@ -74,7 +90,10 @@ function App() {
               <button
                 key={ft}
                 type="button"
-                onClick={() => setFlowType(ft)}
+                onClick={() => {
+                  setFlowType(ft);
+                  setCategory(""); // Reset category when switching flow type
+                }}
                 style={{
                   ...baseButtonStyle,
                   display: "inline-block",
@@ -84,6 +103,24 @@ function App() {
                 }}
               >
                 {ft}
+              </button>
+            ))}
+        </div>
+        <div className="categoriesSelector">
+          {currentCategory &&
+            currentCategory.map((c) => (
+              <button
+                key={c}
+                type="button"
+                onClick={() => setCategory(c)}
+                style={{
+                  ...baseButtonStyle,
+                  backgroundColor: category === c ? "wheat" : "grey",
+                  color: "black",
+                  fontWeight: category === c ? "normal" : "lighter",
+                }}
+              >
+                {c}
               </button>
             ))}
         </div>
