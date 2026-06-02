@@ -1,11 +1,35 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "./supabaseClient";
+import Auth from "./Auth";
 
 function App() {
   const [amount, setAmount] = useState("");
   const [type, setType] = useState("");
   const [flowType, setFlowType] = useState("");
   const [category, setCategory] = useState("");
+  const [session, setSession] = useState(null);
+
+  useEffect(() => {
+    //detemines if there is an existing session, updates session to object with user data if
+    //it exists on load
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    //checks in real time for changes in the auth process - watchdog
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    // ensures no memory leals from the watchdog continuously running in the background
+    return () => subscription.unsubscribe();
+  }, []);
+
+  if (!session) {
+    return <Auth />;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
