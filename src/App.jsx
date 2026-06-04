@@ -34,9 +34,10 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { error } = await supabase // inserting an amount value to table
-      .from("test_budget")
+      .from("transactions")
       .insert([
         {
+          user_id: session?.user?.id, // associate the entry with the current user's ID
           amount: parseFloat(amount),
           type: type,
           flow_type: flowType,

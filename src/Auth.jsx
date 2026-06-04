@@ -42,14 +42,29 @@ function Auth() {
 
   const baseInputStyle = {
     all: "unset",
-    borderRadius: "10px",
+    display: "block",
+    textAlign: "center",
+    fontSize: "1.5rem",
+    padding: "10px",
+    margin: "15px auto",
+    borderRadius: "5px",
     backgroundColor: "rgb(221, 221, 221)",
     color: "black",
   };
 
   return (
     <div className="auth-container">
-      <h2>{isSignUp ? "Sign Up" : "Log In"}</h2>
+      <h2
+        style={{
+          display: "inline-block",
+          fontSize: "2rem",
+          margin: "20px 0 30px 0",
+          borderBottom: "solid 1px rgb(221, 221, 221)",
+          fontWeight: "350",
+        }}
+      >
+        {isSignUp ? "Sign Up" : "Log in to Your Account"}
+      </h2>
       <form onSubmit={handleAuth}>
         <input
           type="email"
@@ -75,17 +90,33 @@ function Auth() {
           type="submit"
           style={{
             ...baseButtonStyle,
+            color: "white",
+            border: "solid 1px white",
+            backgroundColor: "rgb(111, 109, 109)",
+            padding: "6px 10px 10px 10px",
           }}
         >
-          {isSignUp ? "Sign Up" : "Log In"}
+          <p>→</p>
         </button>
       </form>
       <p>
-        {isSignUp ? "Already have an account?" : "Don't have an account?"}
+        <p
+          style={{
+            fontSize: "1.2rem",
+            margin: "15px 0 0 0",
+          }}
+        >
+          {isSignUp ? "Already have an account?" : "Don't have an account?"}
+        </p>
         <button
           onClick={() => setIsSignUp(!isSignUp)}
           style={{
             ...baseButtonStyle,
+            fontSize: "1.4rem",
+            color: "rgb(223, 223, 223)",
+            padding: "0 0 5px 0",
+            borderRadius: "0",
+            borderBottom: "solid 1px rgb(221, 221, 221)",
           }}
         >
           {isSignUp ? "Log In" : "Sign Up"}
