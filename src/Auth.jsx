@@ -1,5 +1,66 @@
 import { useState } from "react";
 import { supabase } from "./supabaseClient";
+import styled, { css } from "styled-components";
+
+const baseButtonStyle = css`
+  all: unset;
+  cursor: pointer;
+  font-size: 2rem;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 10px;
+`;
+
+const baseInputStyle = css`
+  all: unset;
+  display: block;
+  text-align: center;
+  font-size: 1.5rem;
+  padding: 10px;
+  margin: 15px auto;
+  border-radius: 5px;
+  background-color: rgb(221, 221, 221);
+  color: black;
+`;
+
+const AuthContainer = styled.div``;
+
+const FormHeader = styled.h2`
+  display: inline-block;
+  font-size: 2rem;
+  margin: 20px 0 30px 0;
+  border-bottom: solid 1px rgb(221, 221, 221);
+  font-weight: 350;
+`;
+
+const EmailInput = styled.input`
+  ${baseInputStyle}
+`;
+
+const PasswordInput = styled.input`
+  ${baseInputStyle}
+`;
+
+const SubmitButton = styled.button`
+  ${baseButtonStyle}
+  color: white;
+  border: solid 1px white;
+  background-color: rgb(111, 109, 109);
+  padding: 6px 10px 10px 10px;
+`;
+
+const FormChangeText = styled.p`
+  font-size: 1.2rem;
+  margin: 15px 0 0 0;
+`;
+const FormChangeButton = styled.button`
+  ${baseButtonStyle}
+  font-size: 1.4rem;
+  color: rgb(223, 223, 223);
+  padding: 0 0 5px 0;
+  border-radius: 0;
+  border-bottom: solid 1px rgb(221, 221, 221);
+`;
 
 function Auth() {
   const [email, setEmail] = useState("");
@@ -31,98 +92,37 @@ function Auth() {
     }
   };
 
-  const baseButtonStyle = {
-    all: "unset",
-    cursor: "pointer",
-    fontSize: "2rem",
-    padding: "15px",
-    borderRadius: "10px",
-    margin: "10px",
-  };
-
-  const baseInputStyle = {
-    all: "unset",
-    display: "block",
-    textAlign: "center",
-    fontSize: "1.5rem",
-    padding: "10px",
-    margin: "15px auto",
-    borderRadius: "5px",
-    backgroundColor: "rgb(221, 221, 221)",
-    color: "black",
-  };
-
   return (
-    <div className="auth-container">
-      <h2
-        style={{
-          display: "inline-block",
-          fontSize: "2rem",
-          margin: "20px 0 30px 0",
-          borderBottom: "solid 1px rgb(221, 221, 221)",
-          fontWeight: "350",
-        }}
-      >
-        {isSignUp ? "Sign Up" : "Log in to Your Account"}
-      </h2>
+    <AuthContainer>
+      <FormHeader>{isSignUp ? "Sign Up" : "Log in to Your Account"}</FormHeader>
       <form onSubmit={handleAuth}>
-        <input
+        <EmailInput
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          style={{
-            ...baseInputStyle,
-          }}
           required
         />
-        <input
+        <PasswordInput
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          style={{
-            ...baseInputStyle,
-          }}
           required
         />
-        <button
-          type="submit"
-          style={{
-            ...baseButtonStyle,
-            color: "white",
-            border: "solid 1px white",
-            backgroundColor: "rgb(111, 109, 109)",
-            padding: "6px 10px 10px 10px",
-          }}
-        >
+        <SubmitButton type="submit">
           <p>→</p>
-        </button>
+        </SubmitButton>
       </form>
       <p>
-        <p
-          style={{
-            fontSize: "1.2rem",
-            margin: "15px 0 0 0",
-          }}
-        >
+        <FormChangeText>
           {isSignUp ? "Already have an account?" : "Don't have an account?"}
-        </p>
-        <button
-          onClick={() => setIsSignUp(!isSignUp)}
-          style={{
-            ...baseButtonStyle,
-            fontSize: "1.4rem",
-            color: "rgb(223, 223, 223)",
-            padding: "0 0 5px 0",
-            borderRadius: "0",
-            borderBottom: "solid 1px rgb(221, 221, 221)",
-          }}
-        >
+        </FormChangeText>
+        <FormChangeButton onClick={() => setIsSignUp(!isSignUp)}>
           {isSignUp ? "Log In" : "Sign Up"}
-        </button>
+        </FormChangeButton>
       </p>
-    </div>
+    </AuthContainer>
   );
 }
 
