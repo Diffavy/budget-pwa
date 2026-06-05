@@ -47,6 +47,16 @@ const SubmitButton = styled.button`
   border: solid 1px white;
   background-color: rgb(111, 109, 109);
   padding: 6px 10px 10px 10px;
+
+  &:hover {
+    background-color: rgb(132, 131, 131);
+    transform: scale(1.1);
+  }
+
+  &:active {
+    background-color: rgb(157, 154, 154);
+    transform: scale(1.05);
+  }
 `;
 
 const FormChangeText = styled.p`
@@ -60,6 +70,17 @@ const FormChangeButton = styled.button`
   padding: 0 0 5px 0;
   border-radius: 0;
   border-bottom: solid 1px rgb(221, 221, 221);
+
+  &:hover {
+    color: rgb(255, 255, 255);
+    translatey: -5px;
+    transform: scale(1.1);
+    padding: 0 0 7px 0;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
 `;
 
 function Auth() {
