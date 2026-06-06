@@ -1,6 +1,45 @@
 import { useEffect, useState } from "react";
 import { supabase } from "./supabaseClient";
+import styled, { css } from "styled-components";
 import Auth from "./Auth";
+
+const baseButtonStyle = css`
+  all: unset;
+  cursor: pointer;
+  font-size: 2rem;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 10px;
+`;
+
+const IncomeButton = styled.button`
+  ${baseButtonStyle}
+  color: ${(props) => (props.$active ? "white" : "black")};
+  background-color: ${(props) => (props.$active ? "green" : "grey")};
+  font-weight: ${(props) => (props.$active ? "bold" : "normal")};
+`;
+
+const ExpenseButton = styled.button`
+  ${baseButtonStyle}
+  color: ${(props) => (props.$active ? "white" : "black")};
+  background-color: ${(props) => (props.$active ? "red" : "grey")};
+  font-weight: ${(props) => (props.$active ? "bold" : "normal")};
+`;
+
+const FlowTypeButton = styled.button`
+  ${baseButtonStyle}
+  display: inline-block;
+  background-color: ${(props) => (props.$active ? "white" : "grey")};
+  font-weight: ${(props) => (props.$active ? "bold" : "normal")};
+  color: black;
+`;
+
+const CategoryButton = styled.button`
+  ${baseButtonStyle}
+  background-color: ${(props) => (props.$active ? "wheat" : "grey")};
+  color: black;
+  font-weight: ${(props) => (props.$active ? "normal" : "lighter")};
+`;
 
 function App() {
   const [amount, setAmount] = useState("");
@@ -53,7 +92,7 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { error } = await supabase // inserting an amount value to table
+    const { data, error } = await supabase // inserting an amount value to table
       .from("transactions")
       .insert([
         {
@@ -63,23 +102,17 @@ function App() {
           flow_type: flowType,
           category: category || (type === "income" ? "income" : "general"), // If category is empty and type is not "income", implies expense, so set category to "general"
         },
-      ]);
+      ])
+      .select(); // return the inserted row
 
     if (error) {
       console.log(error);
-    } else {
+    } else if (data && data.length > 0) {
       alert("Sent to database!");
+      const addedTransaction = data[0]; // Get the inserted transaction
+      setTransactions((prev) => [addedTransaction, ...prev]); // Update state with the new transaction, no lag as we don't rerun useEffect script and update immediately
       setAmount("");
     }
-  };
-
-  const baseButtonStyle = {
-    all: "unset",
-    cursor: "pointer",
-    fontSize: "2rem",
-    padding: "15px",
-    borderRadius: "10px",
-    margin: "10px",
   };
 
   const flowTypes = ["daily", "subscription", "one-off"];
@@ -96,77 +129,56 @@ function App() {
     <>
       <form onSubmit={handleSubmit}>
         <div>
-          <button
+          <IncomeButton
             type="button"
+            $active={type === "income"}
             onClick={() => {
               setType("income");
               setFlowType(""); // Reset flow type when switching to income
               setCategory(""); // Reset category when switching to income
             }}
-            style={{
-              ...baseButtonStyle,
-              color: type === "income" ? "white" : "black",
-              backgroundColor: type === "income" ? "green" : "grey",
-              fontWeight: type === "income" ? "bold" : "normal",
-            }}
           >
             Income
-          </button>
-          <button
+          </IncomeButton>
+          <ExpenseButton
             type="button"
+            $active={type === "expense"}
             onClick={() => {
               setType("expense");
               setFlowType(flowTypes[0]); // Set default flow type to "daily" when switching to expense
               setCategory(""); // Reset category when switching to expense
             }}
-            style={{
-              ...baseButtonStyle,
-              color: type === "expense" ? "white" : "black",
-              backgroundColor: type === "expense" ? "red" : "grey",
-              fontWeight: type === "expense" ? "bold" : "normal",
-            }}
           >
             Expense
-          </button>
+          </ExpenseButton>
         </div>
         <div className="flowTypeSelector">
           {type === "expense" &&
             flowTypes.map((ft) => (
-              <button
+              <FlowTypeButton
+                $active={flowType === ft}
                 key={ft}
                 type="button"
                 onClick={() => {
                   setFlowType(ft);
                   setCategory(""); // Reset category when switching flow type
                 }}
-                style={{
-                  ...baseButtonStyle,
-                  display: "inline-block",
-                  backgroundColor: flowType === ft ? "white" : "grey",
-                  fontWeight: flowType === ft ? "bold" : "normal",
-                  color: "black",
-                }}
               >
                 {ft}
-              </button>
+              </FlowTypeButton>
             ))}
         </div>
         <div className="categoriesSelector">
           {currentCategory &&
             currentCategory.map((c) => (
-              <button
+              <CategoryButton
+                $active={category === c}
                 key={c}
                 type="button"
                 onClick={() => setCategory(c)}
-                style={{
-                  ...baseButtonStyle,
-                  backgroundColor: category === c ? "wheat" : "grey",
-                  color: "black",
-                  fontWeight: category === c ? "normal" : "lighter",
-                }}
               >
                 {c}
-              </button>
+              </CategoryButton>
             ))}
         </div>
         <input
