@@ -8,6 +8,26 @@ function App() {
   const [flowType, setFlowType] = useState("");
   const [category, setCategory] = useState("");
   const [session, setSession] = useState(null);
+  const [transactions, setTransactions] = useState([]); //to hold exisiting transactions for a given user
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      const { data, error } = await supabase
+        .from("transactions")
+        .select("*")
+        .eq("user_id", session?.user?.id); // pulls data only relevant to current user
+
+      if (error) {
+        console.error("Error occured whilst fetching data", error.message);
+      } else if (data) {
+        setTransactions(data);
+      }
+    };
+
+    if (session?.user?.id) {
+      fetchTransactions();
+    }
+  }, [session]);
 
   useEffect(() => {
     //detemines if there is an existing session, updates session to object with user data if
