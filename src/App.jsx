@@ -41,6 +41,38 @@ const CategoryButton = styled.button`
   font-weight: ${(props) => (props.$active ? "normal" : "lighter")};
 `;
 
+const AmountInput = styled.input`
+  all: unset;
+  display: block;
+  text-align: center;
+  font-size: 1.5rem;
+  padding: 10px;
+  margin: 15px auto;
+  border-radius: 5px;
+  background-color: rgb(221, 221, 221);
+  color: black;
+`;
+
+const SubmitButton = styled.button`
+  ${baseButtonStyle}
+  font-size: 1.3rem;
+  padding: 7px;
+  border-radius: 5px;
+  background-color: rgb(54, 54, 54);
+  border: solid 1px rgb(221, 221, 221);
+  color: rgb(221, 221, 221);
+
+  &:hover {
+    background-color: rgb(88, 88, 88);
+    transform: scale(1.05);
+  }
+
+  &:active {
+    background-color: rgb(111, 110, 110);
+    transform: scale(0.95);
+  }
+`;
+
 function App() {
   const [amount, setAmount] = useState("");
   const [type, setType] = useState("");
@@ -181,13 +213,13 @@ function App() {
               </CategoryButton>
             ))}
         </div>
-        <input
+        <AmountInput
           type="text"
           value={amount}
           placeholder="Enter a number"
           onChange={(e) => setAmount(e.target.value)}
         />
-        <button type="submit">Submit</button>
+        <SubmitButton type="submit">Submit</SubmitButton>
       </form>
     </>
   );
