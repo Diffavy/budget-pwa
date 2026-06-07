@@ -6,14 +6,25 @@ import Auth from "./Auth";
 const baseButtonStyle = css`
   all: unset;
   cursor: pointer;
-  font-size: 2rem;
-  padding: 15px;
-  border-radius: 10px;
-  margin: 10px;
+  font-size: 1.5rem;
+  padding: 8px;
+  margin: 0px;
 `;
 
+const TransactionForm = styled.form`
+  width: 100vw;
+  height: 100vh;
+  text-align: center;
+  background-color: rgb(221, 221, 221);
+`;
+const IncomeExpenseWrapper = styled.div`
+  text-align: center;
+  margin-bottom: 10px;
+  margin-top: 20px;
+`;
 const IncomeButton = styled.button`
   ${baseButtonStyle}
+  border-radius: 5px 0 0 5px;
   color: ${(props) => (props.$active ? "white" : "black")};
   background-color: ${(props) => (props.$active ? "green" : "grey")};
   font-weight: ${(props) => (props.$active ? "bold" : "normal")};
@@ -21,9 +32,15 @@ const IncomeButton = styled.button`
 
 const ExpenseButton = styled.button`
   ${baseButtonStyle}
+  border-radius: 0 5px 5px 0;
   color: ${(props) => (props.$active ? "white" : "black")};
   background-color: ${(props) => (props.$active ? "red" : "grey")};
   font-weight: ${(props) => (props.$active ? "bold" : "normal")};
+`;
+
+const FlowTypeWrapper = styled.div`
+  text-align: center;
+  margin-bottom: 10px;
 `;
 
 const FlowTypeButton = styled.button`
@@ -32,6 +49,11 @@ const FlowTypeButton = styled.button`
   background-color: ${(props) => (props.$active ? "white" : "grey")};
   font-weight: ${(props) => (props.$active ? "bold" : "normal")};
   color: black;
+`;
+
+const CategoryWrapper = styled.div`
+  text-align: center;
+  margin-bottom: 10px;
 `;
 
 const CategoryButton = styled.button`
@@ -49,8 +71,9 @@ const AmountInput = styled.input`
   padding: 10px;
   margin: 15px auto;
   border-radius: 5px;
-  background-color: rgb(221, 221, 221);
-  color: black;
+  background-color: rgb(198, 197, 197);
+  color: rgb(50, 50, 50);
+  border: solid 1px rgb(88, 88, 88);
 `;
 
 const SubmitButton = styled.button`
@@ -159,8 +182,8 @@ function App() {
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <div>
+      <TransactionForm onSubmit={handleSubmit}>
+        <IncomeExpenseWrapper>
           <IncomeButton
             type="button"
             $active={type === "income"}
@@ -183,8 +206,8 @@ function App() {
           >
             Expense
           </ExpenseButton>
-        </div>
-        <div className="flowTypeSelector">
+        </IncomeExpenseWrapper>
+        <FlowTypeWrapper>
           {type === "expense" &&
             flowTypes.map((ft) => (
               <FlowTypeButton
@@ -199,8 +222,8 @@ function App() {
                 {ft}
               </FlowTypeButton>
             ))}
-        </div>
-        <div className="categoriesSelector">
+        </FlowTypeWrapper>
+        <CategoryWrapper>
           {currentCategory &&
             currentCategory.map((c) => (
               <CategoryButton
@@ -212,7 +235,7 @@ function App() {
                 {c}
               </CategoryButton>
             ))}
-        </div>
+        </CategoryWrapper>
         <AmountInput
           type="text"
           value={amount}
@@ -220,7 +243,7 @@ function App() {
           onChange={(e) => setAmount(e.target.value)}
         />
         <SubmitButton type="submit">Submit</SubmitButton>
-      </form>
+      </TransactionForm>
     </>
   );
 }
