@@ -11,9 +11,33 @@ const baseButtonStyle = css`
   margin: 0px;
 `;
 
+const LedgerWrapper = styled.div`
+  width: 100vw;
+  text-align: center;
+  background-color: rgb(221, 221, 221);
+`;
+
+const TransactionRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: solid 1px rgb(198, 197, 197);
+  padding: 10px;
+  color: rgb(50, 50, 50);
+`;
+
+const RowHeader = styled.h2`
+  color: rgb(50, 50, 50);
+  font-weight: 600;
+`;
+
+const TransactionAmount = styled.span`
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: ${(props) => (props.$type === "income" ? "green" : "red")};
+`;
 const TransactionForm = styled.form`
   width: 100vw;
-  height: 100vh;
   text-align: center;
   background-color: rgb(221, 221, 221);
 `;
@@ -49,6 +73,14 @@ const FlowTypeButton = styled.button`
   background-color: ${(props) => (props.$active ? "white" : "grey")};
   font-weight: ${(props) => (props.$active ? "bold" : "normal")};
   color: black;
+
+  &:first-of-type {
+    border-radius: 5px 0 0 5px;
+  }
+
+  &:last-of-type {
+    border-radius: 0 5px 5px 0;
+  }
 `;
 
 const CategoryWrapper = styled.div`
@@ -61,13 +93,21 @@ const CategoryButton = styled.button`
   background-color: ${(props) => (props.$active ? "wheat" : "grey")};
   color: black;
   font-weight: ${(props) => (props.$active ? "normal" : "lighter")};
+
+  &:first-of-type {
+    border-radius: 5px 0 0 5px;
+  }
+
+  &:last-of-type {
+    border-radius: 0 5px 5px 0;
+  }
 `;
 
 const AmountInput = styled.input`
   all: unset;
   display: block;
   text-align: center;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   padding: 10px;
   margin: 15px auto;
   border-radius: 5px;
@@ -78,7 +118,7 @@ const AmountInput = styled.input`
 
 const SubmitButton = styled.button`
   ${baseButtonStyle}
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   padding: 7px;
   border-radius: 5px;
   background-color: rgb(54, 54, 54);
@@ -95,6 +135,10 @@ const SubmitButton = styled.button`
     transform: scale(0.95);
   }
 `;
+
+const capitalizeWord = (s) => {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+};
 
 function App() {
   const [amount, setAmount] = useState("");
@@ -182,6 +226,31 @@ function App() {
 
   return (
     <>
+      <LedgerWrapper>
+        {transactions.length !== 0 &&
+          transactions.map((t) =>
+            t.type === "income" ? (
+              <TransactionRow key={t.id}>
+                <RowHeader>Income</RowHeader>
+                <TransactionAmount $type={t.type}>
+                  {t.amount.toFixed(2)}
+                </TransactionAmount>
+              </TransactionRow>
+            ) : (
+              <TransactionRow key={t.id}>
+                <RowHeader>Expense</RowHeader>
+                <RowHeader>{capitalizeWord(t.flow_type)}</RowHeader>
+                {t.category ? (
+                  <RowHeader>{capitalizeWord(t.category)}</RowHeader>
+                ) : null}
+                <TransactionAmount $type={t.type}>
+                  {t.amount.toFixed(2)}
+                </TransactionAmount>
+              </TransactionRow>
+            ),
+          )}
+      </LedgerWrapper>
+
       <TransactionForm onSubmit={handleSubmit}>
         <IncomeExpenseWrapper>
           <IncomeButton
