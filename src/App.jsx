@@ -11,10 +11,15 @@ const baseButtonStyle = css`
   margin: 0px;
 `;
 
+const PageWrapper = styled.div`
+  background-color: rgb(221, 221, 221);
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+`;
 const LedgerWrapper = styled.div`
   width: 100vw;
   text-align: center;
-  background-color: rgb(221, 221, 221);
 `;
 
 const TransactionRow = styled.div`
@@ -36,10 +41,16 @@ const TransactionAmount = styled.span`
   font-weight: 400;
   color: ${(props) => (props.$type === "income" ? "green" : "red")};
 `;
+
+const SignOutButton = styled.button`
+  ${baseButtonStyle}
+  color: black;
+  position: relative;
+`;
+
 const TransactionForm = styled.form`
   width: 100vw;
   text-align: center;
-  background-color: rgb(221, 221, 221);
 `;
 const IncomeExpenseWrapper = styled.div`
   text-align: center;
@@ -122,7 +133,7 @@ const SubmitButton = styled.button`
   padding: 7px;
   border-radius: 5px;
   background-color: rgb(54, 54, 54);
-  border: solid 1px rgb(221, 221, 221);
+  border: solid 1px rgb(45, 45, 45);
   color: rgb(221, 221, 221);
 
   &:hover {
@@ -214,6 +225,17 @@ function App() {
     }
   };
 
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      console.error("Error when logging out: ", error.message);
+    } else {
+      alert("Logged out!");
+      console.log("Logged out successfully");
+    }
+  };
+
   const flowTypes = ["daily", "subscription", "one-off"];
 
   const categories = {
@@ -226,93 +248,95 @@ function App() {
 
   return (
     <>
-      <LedgerWrapper>
-        {transactions.length !== 0 &&
-          transactions.map((t) =>
-            t.type === "income" ? (
-              <TransactionRow key={t.id}>
-                <RowHeader>Income</RowHeader>
-                <TransactionAmount $type={t.type}>
-                  {t.amount.toFixed(2)}
-                </TransactionAmount>
-              </TransactionRow>
-            ) : (
-              <TransactionRow key={t.id}>
-                <RowHeader>Expense</RowHeader>
-                <RowHeader>{capitalizeWord(t.flow_type)}</RowHeader>
-                {t.category ? (
-                  <RowHeader>{capitalizeWord(t.category)}</RowHeader>
-                ) : null}
-                <TransactionAmount $type={t.type}>
-                  {t.amount.toFixed(2)}
-                </TransactionAmount>
-              </TransactionRow>
-            ),
-          )}
-      </LedgerWrapper>
-
-      <TransactionForm onSubmit={handleSubmit}>
-        <IncomeExpenseWrapper>
-          <IncomeButton
-            type="button"
-            $active={type === "income"}
-            onClick={() => {
-              setType("income");
-              setFlowType(""); // Reset flow type when switching to income
-              setCategory(""); // Reset category when switching to income
-            }}
-          >
-            Income
-          </IncomeButton>
-          <ExpenseButton
-            type="button"
-            $active={type === "expense"}
-            onClick={() => {
-              setType("expense");
-              setFlowType(flowTypes[0]); // Set default flow type to "daily" when switching to expense
-              setCategory(""); // Reset category when switching to expense
-            }}
-          >
-            Expense
-          </ExpenseButton>
-        </IncomeExpenseWrapper>
-        <FlowTypeWrapper>
-          {type === "expense" &&
-            flowTypes.map((ft) => (
-              <FlowTypeButton
-                $active={flowType === ft}
-                key={ft}
-                type="button"
-                onClick={() => {
-                  setFlowType(ft);
-                  setCategory(""); // Reset category when switching flow type
-                }}
-              >
-                {ft}
-              </FlowTypeButton>
-            ))}
-        </FlowTypeWrapper>
-        <CategoryWrapper>
-          {currentCategory &&
-            currentCategory.map((c) => (
-              <CategoryButton
-                $active={category === c}
-                key={c}
-                type="button"
-                onClick={() => setCategory(c)}
-              >
-                {c}
-              </CategoryButton>
-            ))}
-        </CategoryWrapper>
-        <AmountInput
-          type="text"
-          value={amount}
-          placeholder="Enter a number"
-          onChange={(e) => setAmount(e.target.value)}
-        />
-        <SubmitButton type="submit">Submit</SubmitButton>
-      </TransactionForm>
+      <PageWrapper>
+        <LedgerWrapper>
+          {transactions.length !== 0 &&
+            transactions.map((t) =>
+              t.type === "income" ? (
+                <TransactionRow key={t.id}>
+                  <RowHeader>Income</RowHeader>
+                  <TransactionAmount $type={t.type}>
+                    {t.amount.toFixed(2)}
+                  </TransactionAmount>
+                </TransactionRow>
+              ) : (
+                <TransactionRow key={t.id}>
+                  <RowHeader>Expense</RowHeader>
+                  <RowHeader>{capitalizeWord(t.flow_type)}</RowHeader>
+                  {t.category ? (
+                    <RowHeader>{capitalizeWord(t.category)}</RowHeader>
+                  ) : null}
+                  <TransactionAmount $type={t.type}>
+                    {t.amount.toFixed(2)}
+                  </TransactionAmount>
+                </TransactionRow>
+              ),
+            )}
+        </LedgerWrapper>
+        <SignOutButton onClick={handleLogout}>Log Out</SignOutButton>
+        <TransactionForm onSubmit={handleSubmit}>
+          <IncomeExpenseWrapper>
+            <IncomeButton
+              type="button"
+              $active={type === "income"}
+              onClick={() => {
+                setType("income");
+                setFlowType(""); // Reset flow type when switching to income
+                setCategory(""); // Reset category when switching to income
+              }}
+            >
+              Income
+            </IncomeButton>
+            <ExpenseButton
+              type="button"
+              $active={type === "expense"}
+              onClick={() => {
+                setType("expense");
+                setFlowType(flowTypes[0]); // Set default flow type to "daily" when switching to expense
+                setCategory(""); // Reset category when switching to expense
+              }}
+            >
+              Expense
+            </ExpenseButton>
+          </IncomeExpenseWrapper>
+          <FlowTypeWrapper>
+            {type === "expense" &&
+              flowTypes.map((ft) => (
+                <FlowTypeButton
+                  $active={flowType === ft}
+                  key={ft}
+                  type="button"
+                  onClick={() => {
+                    setFlowType(ft);
+                    setCategory(""); // Reset category when switching flow type
+                  }}
+                >
+                  {ft}
+                </FlowTypeButton>
+              ))}
+          </FlowTypeWrapper>
+          <CategoryWrapper>
+            {currentCategory &&
+              currentCategory.map((c) => (
+                <CategoryButton
+                  $active={category === c}
+                  key={c}
+                  type="button"
+                  onClick={() => setCategory(c)}
+                >
+                  {c}
+                </CategoryButton>
+              ))}
+          </CategoryWrapper>
+          <AmountInput
+            type="text"
+            value={amount}
+            placeholder="Enter a number"
+            onChange={(e) => setAmount(e.target.value)}
+          />
+          <SubmitButton type="submit">Submit</SubmitButton>
+        </TransactionForm>
+      </PageWrapper>
     </>
   );
 }
