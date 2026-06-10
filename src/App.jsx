@@ -44,8 +44,25 @@ const TransactionAmount = styled.span`
 
 const SignOutButton = styled.button`
   ${baseButtonStyle}
+  font-size: 1.2rem;
   color: black;
   position: relative;
+  margin-top: 20px;
+  padding: 7px;
+  border-radius: 5px;
+  background-color: rgb(189, 189, 189);
+  border: solid 1px rgb(113, 113, 113);
+  color: rgb(67, 65, 65);
+
+  &:hover {
+    background-color: rgb(167, 167, 167);
+    transform: scale(1.05);
+  }
+
+  &:active {
+    background-color: rgb(145, 145, 145);
+    transform: scale(0.95);
+  }
 `;
 
 const TransactionForm = styled.form`
@@ -273,7 +290,7 @@ function App() {
               ),
             )}
         </LedgerWrapper>
-        <SignOutButton onClick={handleLogout}>Log Out</SignOutButton>
+        <SignOutButton onClick={handleLogout}>Logout</SignOutButton>
         <TransactionForm onSubmit={handleSubmit}>
           <IncomeExpenseWrapper>
             <IncomeButton
