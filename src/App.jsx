@@ -13,12 +13,14 @@ const baseButtonStyle = css`
 
 const PageWrapper = styled.div`
   background-color: rgb(221, 221, 221);
-  position: absolute;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  min-height: 100vh;
+  height: auto;
 `;
 const LedgerWrapper = styled.div`
-  width: 100vw;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
   text-align: center;
 `;
 
@@ -66,7 +68,9 @@ const SignOutButton = styled.button`
 `;
 
 const TransactionForm = styled.form`
-  width: 100vw;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
   text-align: center;
 `;
 const IncomeExpenseWrapper = styled.div`

@@ -15,7 +15,8 @@ const baseInputStyle = css`
   all: unset;
   display: block;
   text-align: center;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
+  width: 300px;
   padding: 10px;
   margin: 15px auto;
   border-radius: 5px;
