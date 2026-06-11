@@ -16,6 +16,7 @@ const PageWrapper = styled.div`
   width: 100%;
   min-height: 100vh;
   height: auto;
+  position: relative;
 `;
 const LedgerWrapper = styled.div`
   width: 100%;
@@ -35,9 +36,18 @@ const TransactionRow = styled.div`
 
 const RowHeader = styled.h2`
   color: rgb(50, 50, 50);
+  font-weight: 700;
+`;
+
+const FlowTypeHeader = styled.h3`
+  color: rgb(50, 50, 50);
   font-weight: 600;
 `;
 
+const OtherText = styled.span`
+  color: rgb(50, 50, 50);
+  font-weight: 500;
+`;
 const TransactionAmount = styled.span`
   font-size: 1.2rem;
   font-weight: 400;
@@ -46,23 +56,23 @@ const TransactionAmount = styled.span`
 
 const SignOutButton = styled.button`
   ${baseButtonStyle}
-  font-size: 1.2rem;
+  position: absolute;
+  font-size: 1rem;
   color: black;
-  position: relative;
-  margin-top: 20px;
-  padding: 7px;
+  top: 10px;
+  left: 10px;
+  padding: 5px;
   border-radius: 5px;
-  background-color: rgb(189, 189, 189);
-  border: solid 1px rgb(113, 113, 113);
-  color: rgb(67, 65, 65);
+  color: rgb(50, 49, 49);
+  background-color: rgb(195, 195, 195);
+  font-weight: 550;
 
   &:hover {
-    background-color: rgb(167, 167, 167);
+    box-shadow: rgba(100, 100, 111, 0.4) 0px 7px 29px 0px;
     transform: scale(1.05);
   }
 
   &:active {
-    background-color: rgb(145, 145, 145);
     transform: scale(0.95);
   }
 `;
@@ -81,16 +91,18 @@ const IncomeExpenseWrapper = styled.div`
 const IncomeButton = styled.button`
   ${baseButtonStyle}
   border-radius: 5px 0 0 5px;
-  color: ${(props) => (props.$active ? "white" : "black")};
-  background-color: ${(props) => (props.$active ? "green" : "grey")};
+  color: ${(props) => (props.$active ? "white" : "rgb(50, 49, 49)")};
+  background-color: ${(props) =>
+    props.$active ? "green" : "rgb(198, 197, 197)"};
   font-weight: ${(props) => (props.$active ? "bold" : "normal")};
 `;
 
 const ExpenseButton = styled.button`
   ${baseButtonStyle}
   border-radius: 0 5px 5px 0;
-  color: ${(props) => (props.$active ? "white" : "black")};
-  background-color: ${(props) => (props.$active ? "red" : "grey")};
+  color: ${(props) => (props.$active ? "white" : "rgb(50, 49, 49)")};
+  background-color: ${(props) =>
+    props.$active ? "red" : "rgb(198, 197, 197)"};
   font-weight: ${(props) => (props.$active ? "bold" : "normal")};
 `;
 
@@ -102,9 +114,10 @@ const FlowTypeWrapper = styled.div`
 const FlowTypeButton = styled.button`
   ${baseButtonStyle}
   display: inline-block;
-  background-color: ${(props) => (props.$active ? "white" : "grey")};
+  background-color: ${(props) =>
+    props.$active ? "white" : "rgb(198, 197, 197)"};
   font-weight: ${(props) => (props.$active ? "bold" : "normal")};
-  color: black;
+  color: rgb(50, 49, 49);
 
   &:first-of-type {
     border-radius: 5px 0 0 5px;
@@ -122,8 +135,9 @@ const CategoryWrapper = styled.div`
 
 const CategoryButton = styled.button`
   ${baseButtonStyle}
-  background-color: ${(props) => (props.$active ? "wheat" : "grey")};
-  color: black;
+  background-color: ${(props) =>
+    props.$active ? "wheat" : "rgb(198, 197, 197)"};
+  color: rgb(50, 49, 49);
   font-weight: ${(props) => (props.$active ? "normal" : "lighter")};
 
   &:first-of-type {
@@ -270,6 +284,7 @@ function App() {
   return (
     <>
       <PageWrapper>
+        <SignOutButton onClick={handleLogout}>Log Out</SignOutButton>
         <LedgerWrapper>
           {transactions.length !== 0 &&
             transactions.map((t) =>
@@ -277,24 +292,23 @@ function App() {
                 <TransactionRow key={t.id}>
                   <RowHeader>Income</RowHeader>
                   <TransactionAmount $type={t.type}>
-                    {t.amount.toFixed(2)}
+                    {(t.amount || 0).toFixed(2)}
                   </TransactionAmount>
                 </TransactionRow>
               ) : (
                 <TransactionRow key={t.id}>
                   <RowHeader>Expense</RowHeader>
-                  <RowHeader>{capitalizeWord(t.flow_type)}</RowHeader>
+                  <FlowTypeHeader>{capitalizeWord(t.flow_type)}</FlowTypeHeader>
                   {t.category ? (
-                    <RowHeader>{capitalizeWord(t.category)}</RowHeader>
+                    <OtherText>{capitalizeWord(t.category)}</OtherText>
                   ) : null}
                   <TransactionAmount $type={t.type}>
-                    {t.amount.toFixed(2)}
+                    {(t.amount || 0).toFixed(2)}
                   </TransactionAmount>
                 </TransactionRow>
               ),
             )}
         </LedgerWrapper>
-        <SignOutButton onClick={handleLogout}>Logout</SignOutButton>
         <TransactionForm onSubmit={handleSubmit}>
           <IncomeExpenseWrapper>
             <IncomeButton
