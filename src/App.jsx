@@ -19,14 +19,24 @@ const PageWrapper = styled.div`
   position: relative;
   box-sizing: border-box;
 `;
+
+const LedgerHeader = styled.h1`
+  text-align: center;
+  display: inline-block;
+  font-size: 1.5rem;
+  margin: 20px 0 10px 0;
+  color: rgb(50, 50, 50);
+  padding: 10px;
+  border-bottom: solid 1px rgb(59, 59, 59);
+`;
 const LedgerWrapper = styled.div`
   width: 100%;
   max-width: 500px;
-  margin: 80px auto 0 auto;
+  margin: 20px auto 0 auto;
   text-align: center;
   padding: 0 20px;
-  border-left: solid 2px rgb(198, 197, 197);
-  border-right: solid 2px rgb(198, 197, 197);
+  border-left: solid 2px rgb(170, 170, 170);
+  border-right: solid 2px rgb(170, 170, 170);
 `;
 
 const TransactionRow = styled.div`
@@ -111,6 +121,11 @@ const IncomeButton = styled.button`
   background-color: ${(props) =>
     props.$active ? "green" : "rgb(198, 197, 197)"};
   font-weight: ${(props) => (props.$active ? "bold" : "normal")};
+
+  &:hover {
+    background-color: rgb(180, 180, 180);
+    transform: scale(1.05);
+  }
 `;
 
 const ExpenseButton = styled.button`
@@ -120,6 +135,11 @@ const ExpenseButton = styled.button`
   background-color: ${(props) =>
     props.$active ? "red" : "rgb(198, 197, 197)"};
   font-weight: ${(props) => (props.$active ? "bold" : "normal")};
+
+  &:hover {
+    background-color: rgb(181, 179, 179);
+    transform: scale(1.05);
+  }
 `;
 
 const FlowTypeWrapper = styled.div`
@@ -142,6 +162,11 @@ const FlowTypeButton = styled.button`
   &:last-of-type {
     border-radius: 0 5px 5px 0;
   }
+
+  &:hover {
+    background-color: rgb(180, 180, 180);
+    transform: scale(1.05);
+  }
 `;
 
 const CategoryWrapper = styled.div`
@@ -163,6 +188,11 @@ const CategoryButton = styled.button`
   &:last-of-type {
     border-radius: 0 5px 5px 0;
   }
+
+  &:hover {
+    background-color: rgb(180, 180, 180);
+    transform: scale(1.05);
+  }
 `;
 
 const AmountInput = styled.input`
@@ -182,13 +212,21 @@ const AmountInput = styled.input`
     background-color: rgb(198, 197, 197);
     border: solid 1px rgb(88, 88, 88);
   }
+
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(1);
+  }
 `;
 
 const SubmitButton = styled.button`
   ${baseButtonStyle}
-  font-size: 1.2rem;
-  padding: 7px;
-  border-radius: 5px;
+  font-size: 1rem;
+  padding: 5px;
+  border-radius: 4px;
   background-color: rgb(54, 54, 54);
   border: solid 1px rgb(45, 45, 45);
   color: rgb(221, 221, 221);
@@ -307,6 +345,7 @@ function App() {
     <>
       <PageWrapper>
         <SignOutButton onClick={handleLogout}>Log Out</SignOutButton>
+        <LedgerHeader>My Transactions :</LedgerHeader>
         <LedgerWrapper>
           {transactions.length !== 0 &&
             transactions.map((t) =>
