@@ -17,31 +17,48 @@ const PageWrapper = styled.div`
   min-height: 100vh;
   height: auto;
   position: relative;
+  box-sizing: border-box;
 `;
 const LedgerWrapper = styled.div`
   width: 100%;
   max-width: 500px;
-  margin: 0 auto;
+  margin: 80px auto 0 auto;
   text-align: center;
+  padding: 0 20px;
+  border-left: solid 2px rgb(198, 197, 197);
+  border-right: solid 2px rgb(198, 197, 197);
 `;
 
 const TransactionRow = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   justify-content: space-between;
   align-items: center;
+  gap: 10px;
   border-bottom: solid 1px rgb(198, 197, 197);
-  padding: 10px;
+  padding: 20px;
+  margin: 0;
   color: rgb(50, 50, 50);
+  border-radius: 2px;
+
+  &:hover {
+    background-color: rgb(189, 189, 189);
+    transform: scale(1.05);
+    transition: all 0.1s ease-in-out;
+    box-shadow: rgba(100, 100, 111, 0.4) 0px 7px 29px 0px;
+  }
 `;
 
 const RowHeader = styled.h2`
   color: rgb(50, 50, 50);
   font-weight: 700;
+  margin: 0;
 `;
 
 const FlowTypeHeader = styled.h3`
   color: rgb(50, 50, 50);
   font-weight: 600;
+  margin: 0;
 `;
 
 const OtherText = styled.span`
@@ -85,8 +102,7 @@ const TransactionForm = styled.form`
 `;
 const IncomeExpenseWrapper = styled.div`
   text-align: center;
-  margin-bottom: 10px;
-  margin-top: 20px;
+  margin: 20px 0;
 `;
 const IncomeButton = styled.button`
   ${baseButtonStyle}
@@ -108,7 +124,7 @@ const ExpenseButton = styled.button`
 
 const FlowTypeWrapper = styled.div`
   text-align: center;
-  margin-bottom: 10px;
+  margin: 20px 0;
 `;
 
 const FlowTypeButton = styled.button`
@@ -130,7 +146,7 @@ const FlowTypeButton = styled.button`
 
 const CategoryWrapper = styled.div`
   text-align: center;
-  margin-bottom: 10px;
+  margin: 20px 0;
 `;
 
 const CategoryButton = styled.button`
@@ -157,9 +173,15 @@ const AmountInput = styled.input`
   padding: 10px;
   margin: 15px auto;
   border-radius: 5px;
-  background-color: rgb(198, 197, 197);
+  background-color: rgb(214, 213, 213);
   color: rgb(50, 50, 50);
-  border: solid 1px rgb(88, 88, 88);
+  font-weight: 550;
+  border: solid 1px rgb(106, 106, 106);
+
+  &:focus {
+    background-color: rgb(198, 197, 197);
+    border: solid 1px rgb(88, 88, 88);
+  }
 `;
 
 const SubmitButton = styled.button`
@@ -291,6 +313,8 @@ function App() {
               t.type === "income" ? (
                 <TransactionRow key={t.id}>
                   <RowHeader>Income</RowHeader>
+                  <hr></hr>
+                  <hr></hr>
                   <TransactionAmount $type={t.type}>
                     {(t.amount || 0).toFixed(2)}
                   </TransactionAmount>
