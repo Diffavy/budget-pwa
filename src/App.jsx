@@ -41,7 +41,7 @@ const LedgerWrapper = styled.div`
 
 const TransactionRow = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr auto;
   justify-content: space-between;
   align-items: center;
   gap: 10px;
@@ -79,6 +79,26 @@ const TransactionAmount = styled.span`
   font-size: 1.2rem;
   font-weight: 400;
   color: ${(props) => (props.$type === "income" ? "green" : "red")};
+`;
+
+const DeleteButton = styled.button`
+  ${baseButtonStyle}
+  font-size: 1rem;
+  padding: 2px 5px;
+  border-radius: 5px;
+  color: rgb(90, 89, 89);
+  background-color: rgb(195, 195, 195);
+  font-weight: 550;
+
+  &:hover {
+    transform: scale(1.05);
+    background-color: rgb(180, 180, 180);
+    color: rgb(50, 49, 49);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
 `;
 
 const SignOutButton = styled.button`
@@ -320,6 +340,17 @@ function App() {
     }
   };
 
+  const handleDelete = async (id) => {
+    const { error } = await supabase.from("transactions").delete().eq("id", id);
+
+    if (error) {
+      console.error("Error deleting transaction: ", error.message);
+    } else {
+      alert("Transaction deleted!");
+      setTransactions((prev) => prev.filter((t) => t.id !== id)); // Update state to remove the deleted transaction
+    }
+  };
+
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
 
@@ -357,6 +388,9 @@ function App() {
                   <TransactionAmount $type={t.type}>
                     {(t.amount || 0).toFixed(2)}
                   </TransactionAmount>
+                  <DeleteButton onClick={() => handleDelete(t.id)}>
+                    Delete
+                  </DeleteButton>
                 </TransactionRow>
               ) : (
                 <TransactionRow key={t.id}>
@@ -368,6 +402,9 @@ function App() {
                   <TransactionAmount $type={t.type}>
                     {(t.amount || 0).toFixed(2)}
                   </TransactionAmount>
+                  <DeleteButton onClick={() => handleDelete(t.id)}>
+                    Delete
+                  </DeleteButton>
                 </TransactionRow>
               ),
             )}
