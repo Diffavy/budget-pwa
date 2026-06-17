@@ -3,6 +3,17 @@ import { supabase } from "./supabaseClient";
 import styled, { css } from "styled-components";
 import Auth from "./Auth";
 
+const THEME = {
+  colors: {
+    background: "rgb(221, 221, 221)",
+    text: "rgb(50, 50, 50)",
+    buttonBackground: "rgb(189, 189, 189)",
+    buttonHover: "rgb(180, 180, 180)",
+    income: "green",
+    expense: "red",
+  },
+};
+
 const baseButtonStyle = css`
   all: unset;
   cursor: pointer;
@@ -11,8 +22,14 @@ const baseButtonStyle = css`
   margin: 0px;
 `;
 
+const baseTextStyle = css`
+  color: ${THEME.colors.text};
+  font-weight: 500;
+  font-size: 1.1rem;
+`;
+
 const PageWrapper = styled.div`
-  background-color: rgb(221, 221, 221);
+  background-color: ${THEME.colors.background};
   width: 100%;
   min-height: 100vh;
   height: auto;
@@ -25,9 +42,9 @@ const LedgerHeader = styled.h1`
   display: inline-block;
   font-size: 1.5rem;
   margin: 20px 0 10px 0;
-  color: rgb(50, 50, 50);
+  color: ${THEME.colors.text};
   padding: 10px;
-  border-bottom: solid 1px rgb(59, 59, 59);
+  border-bottom: solid 1px ${THEME.colors.text};
 `;
 const LedgerWrapper = styled.div`
   width: 100%;
@@ -45,14 +62,14 @@ const TransactionRow = styled.div`
   justify-content: space-between;
   align-items: center;
   gap: 10px;
-  border-bottom: solid 1px rgb(198, 197, 197);
+  border-bottom: solid 1px ${THEME.colors.buttonBackground};
   padding: 20px;
   margin: 0;
-  color: rgb(50, 50, 50);
+  color: ${THEME.colors.text};
   border-radius: 2px;
 
   &:hover {
-    background-color: rgb(189, 189, 189);
+    background-color: ${THEME.colors.buttonBackground};
     transform: scale(1.05);
     transition: all 0.1s ease-in-out;
     box-shadow: rgba(100, 100, 111, 0.4) 0px 7px 29px 0px;
@@ -60,20 +77,18 @@ const TransactionRow = styled.div`
 `;
 
 const RowHeader = styled.h2`
-  color: rgb(50, 50, 50);
+  ${baseTextStyle}
   font-weight: 700;
   margin: 0;
 `;
 
 const FlowTypeHeader = styled.h3`
-  color: rgb(50, 50, 50);
-  font-weight: 600;
+  ${baseTextStyle}
   margin: 0;
 `;
 
 const OtherText = styled.span`
-  color: rgb(50, 50, 50);
-  font-weight: 500;
+  ${baseTextStyle}
 `;
 const TransactionAmount = styled.span`
   font-size: 1.2rem;
@@ -87,13 +102,15 @@ const DeleteButton = styled.button`
   padding: 2px 5px;
   border-radius: 5px;
   color: rgb(90, 89, 89);
-  background-color: rgb(195, 195, 195);
+  background-color: ${THEME.colors.buttonBackground};
   font-weight: 550;
 
   &:hover {
     transform: scale(1.05);
-    background-color: rgb(180, 180, 180);
-    color: rgb(50, 49, 49);
+    color: ${THEME.colors.text};
+    box-shadow:
+      rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset,
+      rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
   }
 
   &:active {
@@ -110,12 +127,12 @@ const SignOutButton = styled.button`
   left: 10px;
   padding: 5px;
   border-radius: 5px;
-  color: rgb(50, 49, 49);
-  background-color: rgb(195, 195, 195);
+  color: ${THEME.colors.text};
+  background-color: ${THEME.colors.buttonBackground};
   font-weight: 550;
 
   &:hover {
-    box-shadow: rgba(100, 100, 111, 0.4) 0px 7px 29px 0px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     transform: scale(1.05);
   }
 
@@ -137,13 +154,13 @@ const IncomeExpenseWrapper = styled.div`
 const IncomeButton = styled.button`
   ${baseButtonStyle}
   border-radius: 5px 0 0 5px;
-  color: ${(props) => (props.$active ? "white" : "rgb(50, 49, 49)")};
+  color: ${(props) => (props.$active ? "white" : THEME.colors.text)};
   background-color: ${(props) =>
-    props.$active ? "green" : "rgb(198, 197, 197)"};
+    props.$active ? "green" : THEME.colors.buttonBackground};
   font-weight: ${(props) => (props.$active ? "bold" : "normal")};
 
   &:hover {
-    background-color: rgb(180, 180, 180);
+    background-color: ${THEME.colors.buttonHover};
     transform: scale(1.05);
   }
 `;
@@ -151,13 +168,13 @@ const IncomeButton = styled.button`
 const ExpenseButton = styled.button`
   ${baseButtonStyle}
   border-radius: 0 5px 5px 0;
-  color: ${(props) => (props.$active ? "white" : "rgb(50, 49, 49)")};
+  color: ${(props) => (props.$active ? "white" : `${THEME.colors.text}`)};
   background-color: ${(props) =>
-    props.$active ? "red" : "rgb(198, 197, 197)"};
+    props.$active ? "red" : THEME.colors.buttonBackground};
   font-weight: ${(props) => (props.$active ? "bold" : "normal")};
 
   &:hover {
-    background-color: rgb(181, 179, 179);
+    background-color: ${THEME.colors.buttonHover};
     transform: scale(1.05);
   }
 `;
@@ -171,9 +188,9 @@ const FlowTypeButton = styled.button`
   ${baseButtonStyle}
   display: inline-block;
   background-color: ${(props) =>
-    props.$active ? "white" : "rgb(198, 197, 197)"};
+    props.$active ? "white" : THEME.colors.buttonBackground};
   font-weight: ${(props) => (props.$active ? "bold" : "normal")};
-  color: rgb(50, 49, 49);
+  color: ${THEME.colors.text};
 
   &:first-of-type {
     border-radius: 5px 0 0 5px;
@@ -184,7 +201,7 @@ const FlowTypeButton = styled.button`
   }
 
   &:hover {
-    background-color: rgb(180, 180, 180);
+    background-color: ${THEME.colors.buttonHover};
     transform: scale(1.05);
   }
 `;
@@ -197,8 +214,8 @@ const CategoryWrapper = styled.div`
 const CategoryButton = styled.button`
   ${baseButtonStyle}
   background-color: ${(props) =>
-    props.$active ? "wheat" : "rgb(198, 197, 197)"};
-  color: rgb(50, 49, 49);
+    props.$active ? "wheat" : THEME.colors.buttonBackground};
+  color: ${THEME.colors.text};
   font-weight: ${(props) => (props.$active ? "normal" : "lighter")};
 
   &:first-of-type {
@@ -210,7 +227,7 @@ const CategoryButton = styled.button`
   }
 
   &:hover {
-    background-color: rgb(180, 180, 180);
+    background-color: ${THEME.colors.buttonHover};
     transform: scale(1.05);
   }
 `;
@@ -224,7 +241,7 @@ const AmountInput = styled.input`
   margin: 15px auto;
   border-radius: 5px;
   background-color: rgb(214, 213, 213);
-  color: rgb(50, 50, 50);
+  color: ${THEME.colors.text};
   font-weight: 550;
   border: solid 1px rgb(106, 106, 106);
 
@@ -247,9 +264,9 @@ const SubmitButton = styled.button`
   font-size: 1rem;
   padding: 5px;
   border-radius: 4px;
-  background-color: rgb(54, 54, 54);
-  border: solid 1px rgb(45, 45, 45);
-  color: rgb(221, 221, 221);
+  background-color: ${THEME.colors.text};
+  border: solid 1px rgb(40, 40, 40);
+  color: ${THEME.colors.buttonBackground};
 
   &:hover {
     background-color: rgb(88, 88, 88);
