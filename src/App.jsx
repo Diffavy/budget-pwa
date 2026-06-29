@@ -8,6 +8,7 @@ const THEME = {
     background: "rgb(221, 221, 221)",
     text: "rgb(50, 50, 50)",
     buttonBackground: "rgb(189, 189, 189)",
+    buttonFocus: "rgb(90, 90, 90)",
     buttonHover: "rgb(180, 180, 180)",
     income: "green",
     expense: "red",
@@ -52,8 +53,8 @@ const LedgerWrapper = styled.div`
   margin: 20px auto 0 auto;
   text-align: center;
   padding: 0 20px;
-  border-left: solid 2px rgb(170, 170, 170);
-  border-right: solid 2px rgb(170, 170, 170);
+  border-left: solid 1.5px ${THEME.colors.buttonHover};
+  border-right: solid 1.5px ${THEME.colors.buttonHover};
 `;
 
 const TransactionRow = styled.div`
@@ -101,7 +102,7 @@ const DeleteButton = styled.button`
   font-size: 1rem;
   padding: 2px 5px;
   border-radius: 5px;
-  color: rgb(90, 89, 89);
+  color: ${THEME.colors.buttonFocus};
   background-color: ${THEME.colors.buttonBackground};
   font-weight: 550;
 
@@ -240,14 +241,14 @@ const AmountInput = styled.input`
   padding: 10px;
   margin: 15px auto;
   border-radius: 5px;
-  background-color: rgb(214, 213, 213);
+  background-color: ${THEME.colors.buttonBackground};
   color: ${THEME.colors.text};
   font-weight: 550;
   border: solid 1px rgb(106, 106, 106);
 
   &:focus {
-    background-color: rgb(198, 197, 197);
-    border: solid 1px rgb(88, 88, 88);
+    background-color: ${THEME.colors.buttonHover};
+    border: solid 1px ${THEME.colors.buttonFocus};
   }
 
   &:hover {
@@ -269,7 +270,7 @@ const SubmitButton = styled.button`
   color: ${THEME.colors.buttonBackground};
 
   &:hover {
-    background-color: rgb(88, 88, 88);
+    background-color: ${THEME.colors.buttonHover};
     transform: scale(1.05);
   }
 
