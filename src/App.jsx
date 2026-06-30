@@ -390,6 +390,10 @@ function App() {
 
   const currentCategory = flowType ? categories[flowType] : [];
 
+  const totalAmount = transactions.reduce((total, t) => {
+    return t.type === "income" ? total + t.amount : total - t.amount;
+  }, 0);
+
   return (
     <>
       <PageWrapper>
@@ -426,6 +430,15 @@ function App() {
                 </TransactionRow>
               ),
             )}
+          <TransactionRow>
+            <RowHeader>Total</RowHeader>
+            <hr></hr>
+            <hr></hr>
+            <TransactionAmount $type="total">
+              {totalAmount.toFixed(2)}
+            </TransactionAmount>
+            <DeleteButton>Delete</DeleteButton>
+          </TransactionRow>
         </LedgerWrapper>
         <TransactionForm onSubmit={handleSubmit}>
           <IncomeExpenseWrapper>
