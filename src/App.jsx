@@ -119,6 +119,15 @@ const DeleteButton = styled.button`
   }
 `;
 
+const BalanceDisplay = styled.div`
+  font-size: 1.5rem;
+  font-weight: 630;
+  color: ${(props) =>
+    props.$balance >= 0 ? THEME.colors.text : THEME.colors.expense};
+  text-align: center;
+  margin: 0;
+  padding: 20px;
+`;
 const SignOutButton = styled.button`
   ${baseButtonStyle}
   position: absolute;
@@ -400,6 +409,11 @@ function App() {
         <SignOutButton onClick={handleLogout}>Log Out</SignOutButton>
         <LedgerHeader>My Transactions :</LedgerHeader>
         <LedgerWrapper>
+          {transactions.length === 0 && (
+            <OtherText style={{ color: THEME.colors.buttonFocus }}>
+              No transactions found.
+            </OtherText>
+          )}
           {transactions.length !== 0 &&
             transactions.map((t) =>
               t.type === "income" ? (
@@ -430,15 +444,9 @@ function App() {
                 </TransactionRow>
               ),
             )}
-          <TransactionRow>
-            <RowHeader>Total</RowHeader>
-            <hr></hr>
-            <hr></hr>
-            <TransactionAmount $type="total">
-              {totalAmount.toFixed(2)}
-            </TransactionAmount>
-            <DeleteButton>Delete</DeleteButton>
-          </TransactionRow>
+          <BalanceDisplay $balance={totalAmount}>
+            Balance: {totalAmount.toFixed(2)}
+          </BalanceDisplay>
         </LedgerWrapper>
         <TransactionForm onSubmit={handleSubmit}>
           <IncomeExpenseWrapper>
