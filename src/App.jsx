@@ -103,7 +103,7 @@ const DeleteButton = styled.button`
   padding: 2px 5px;
   border-radius: 5px;
   color: ${THEME.colors.buttonFocus};
-  background-color: ${THEME.colors.buttonBackground};
+  background-color: ${THEME.colors.buttonHover};
   font-weight: 550;
 
   &:hover {
@@ -121,12 +121,19 @@ const DeleteButton = styled.button`
 
 const BalanceDisplay = styled.div`
   font-size: 1.5rem;
-  font-weight: 630;
+  font-weight: 650;
   color: ${(props) =>
     props.$balance >= 0 ? THEME.colors.text : THEME.colors.expense};
   text-align: center;
   margin: 0;
   padding: 20px;
+
+  &:hover {
+    background-color: ${THEME.colors.buttonBackground};
+    transform: scale(1.05);
+    transition: all 0.1s ease-in-out;
+    box-shadow: rgba(100, 100, 111, 0.4) 0px 7px 29px 0px;
+  }
 `;
 const SignOutButton = styled.button`
   ${baseButtonStyle}
