@@ -57,6 +57,8 @@ const LedgerWrapper = styled.div`
   border-right: solid 1.5px ${THEME.colors.buttonHover};
 `;
 
+const ProfileWrapper = styled.div``;
+
 const TransactionRow = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr auto;
@@ -135,11 +137,32 @@ const BalanceDisplay = styled.div`
     box-shadow: rgba(100, 100, 111, 0.4) 0px 7px 29px 0px;
   }
 `;
+
+const ProfileButton = styled.button`
+  ${baseButtonStyle}
+  position: absolute;
+  font-size: 1rem;
+  top: 10px;
+  right: 10px;
+  padding: 5px;
+  border-radius: 5px;
+  color: ${THEME.colors.text};
+  background-color: ${THEME.colors.buttonBackground};
+  font-weight: 550;
+
+  &:hover {
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+`;
 const SignOutButton = styled.button`
   ${baseButtonStyle}
   position: absolute;
   font-size: 1rem;
-  color: black;
   top: 10px;
   left: 10px;
   padding: 5px;
@@ -307,6 +330,7 @@ function App() {
   const [category, setCategory] = useState("");
   const [session, setSession] = useState(null);
   const [transactions, setTransactions] = useState([]); //to hold exisiting transactions for a given user
+  const [view, setView] = useState("ledger");
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -414,109 +438,123 @@ function App() {
     <>
       <PageWrapper>
         <SignOutButton onClick={handleLogout}>Log Out</SignOutButton>
-        <LedgerHeader>My Transactions :</LedgerHeader>
-        <LedgerWrapper>
-          {transactions.length === 0 && (
-            <OtherText style={{ color: THEME.colors.buttonFocus }}>
-              No transactions found.
-            </OtherText>
-          )}
-          {transactions.length !== 0 &&
-            transactions.map((t) =>
-              t.type === "income" ? (
-                <TransactionRow key={t.id}>
-                  <RowHeader>Income</RowHeader>
-                  <hr></hr>
-                  <hr></hr>
-                  <TransactionAmount $type={t.type}>
-                    {(t.amount || 0).toFixed(2)}
-                  </TransactionAmount>
-                  <DeleteButton onClick={() => handleDelete(t.id)}>
-                    Delete
-                  </DeleteButton>
-                </TransactionRow>
-              ) : (
-                <TransactionRow key={t.id}>
-                  <RowHeader>Expense</RowHeader>
-                  <FlowTypeHeader>{capitalizeWord(t.flow_type)}</FlowTypeHeader>
-                  {t.category ? (
-                    <OtherText>{capitalizeWord(t.category)}</OtherText>
-                  ) : null}
-                  <TransactionAmount $type={t.type}>
-                    {(t.amount || 0).toFixed(2)}
-                  </TransactionAmount>
-                  <DeleteButton onClick={() => handleDelete(t.id)}>
-                    Delete
-                  </DeleteButton>
-                </TransactionRow>
-              ),
-            )}
-          <BalanceDisplay $balance={totalAmount}>
-            Balance: {totalAmount.toFixed(2)}
-          </BalanceDisplay>
-        </LedgerWrapper>
-        <TransactionForm onSubmit={handleSubmit}>
-          <IncomeExpenseWrapper>
-            <IncomeButton
-              type="button"
-              $active={type === "income"}
-              onClick={() => {
-                setType("income");
-                setFlowType(""); // Reset flow type when switching to income
-                setCategory(""); // Reset category when switching to income
-              }}
-            >
-              Income
-            </IncomeButton>
-            <ExpenseButton
-              type="button"
-              $active={type === "expense"}
-              onClick={() => {
-                setType("expense");
-                setFlowType(flowTypes[0]); // Set default flow type to "daily" when switching to expense
-                setCategory(""); // Reset category when switching to expense
-              }}
-            >
-              Expense
-            </ExpenseButton>
-          </IncomeExpenseWrapper>
-          <FlowTypeWrapper>
-            {type === "expense" &&
-              flowTypes.map((ft) => (
-                <FlowTypeButton
-                  $active={flowType === ft}
-                  key={ft}
+        <ProfileButton
+          onClick={() => setView(view === "ledger" ? "profile" : "ledger")}
+        >
+          {view === "ledger" ? "Go to Profile" : "Back to Ledger"}
+        </ProfileButton>
+
+        {view === "profile" ? (
+          <ProfileWrapper></ProfileWrapper>
+        ) : (
+          <>
+            <LedgerHeader>My Transactions :</LedgerHeader>
+            <LedgerWrapper>
+              {transactions.length === 0 && (
+                <OtherText style={{ color: THEME.colors.buttonFocus }}>
+                  No transactions found.
+                </OtherText>
+              )}
+              {transactions.length !== 0 &&
+                transactions.map((t) =>
+                  t.type === "income" ? (
+                    <TransactionRow key={t.id}>
+                      <RowHeader>Income</RowHeader>
+                      <hr></hr>
+                      <hr></hr>
+                      <TransactionAmount $type={t.type}>
+                        {(t.amount || 0).toFixed(2)}
+                      </TransactionAmount>
+                      <DeleteButton onClick={() => handleDelete(t.id)}>
+                        Delete
+                      </DeleteButton>
+                    </TransactionRow>
+                  ) : (
+                    <TransactionRow key={t.id}>
+                      <RowHeader>Expense</RowHeader>
+                      <FlowTypeHeader>
+                        {capitalizeWord(t.flow_type)}
+                      </FlowTypeHeader>
+                      {t.category ? (
+                        <OtherText>{capitalizeWord(t.category)}</OtherText>
+                      ) : null}
+                      <TransactionAmount $type={t.type}>
+                        {(t.amount || 0).toFixed(2)}
+                      </TransactionAmount>
+                      <DeleteButton onClick={() => handleDelete(t.id)}>
+                        Delete
+                      </DeleteButton>
+                    </TransactionRow>
+                  ),
+                )}
+              <BalanceDisplay $balance={totalAmount}>
+                Balance: {totalAmount.toFixed(2)}
+              </BalanceDisplay>
+            </LedgerWrapper>
+            <TransactionForm onSubmit={handleSubmit}>
+              <IncomeExpenseWrapper>
+                <IncomeButton
                   type="button"
+                  $active={type === "income"}
                   onClick={() => {
-                    setFlowType(ft);
-                    setCategory(""); // Reset category when switching flow type
+                    setType("income");
+                    setFlowType(""); // Reset flow type when switching to income
+                    setCategory(""); // Reset category when switching to income
                   }}
                 >
-                  {ft}
-                </FlowTypeButton>
-              ))}
-          </FlowTypeWrapper>
-          <CategoryWrapper>
-            {currentCategory &&
-              currentCategory.map((c) => (
-                <CategoryButton
-                  $active={category === c}
-                  key={c}
+                  Income
+                </IncomeButton>
+                <ExpenseButton
                   type="button"
-                  onClick={() => setCategory(c)}
+                  $active={type === "expense"}
+                  onClick={() => {
+                    setType("expense");
+                    setFlowType(flowTypes[0]); // Set default flow type to "daily" when switching to expense
+                    setCategory(""); // Reset category when switching to expense
+                  }}
                 >
-                  {c}
-                </CategoryButton>
-              ))}
-          </CategoryWrapper>
-          <AmountInput
-            type="text"
-            value={amount}
-            placeholder="Enter a number"
-            onChange={(e) => setAmount(e.target.value)}
-          />
-          <SubmitButton type="submit">Submit</SubmitButton>
-        </TransactionForm>
+                  Expense
+                </ExpenseButton>
+              </IncomeExpenseWrapper>
+              <FlowTypeWrapper>
+                {type === "expense" &&
+                  flowTypes.map((ft) => (
+                    <FlowTypeButton
+                      $active={flowType === ft}
+                      key={ft}
+                      type="button"
+                      onClick={() => {
+                        setFlowType(ft);
+                        setCategory(""); // Reset category when switching flow type
+                      }}
+                    >
+                      {ft}
+                    </FlowTypeButton>
+                  ))}
+              </FlowTypeWrapper>
+              <CategoryWrapper>
+                {currentCategory &&
+                  currentCategory.map((c) => (
+                    <CategoryButton
+                      $active={category === c}
+                      key={c}
+                      type="button"
+                      onClick={() => setCategory(c)}
+                    >
+                      {c}
+                    </CategoryButton>
+                  ))}
+              </CategoryWrapper>
+              <AmountInput
+                type="text"
+                value={amount}
+                placeholder="Enter a number"
+                onChange={(e) => setAmount(e.target.value)}
+              />
+              <SubmitButton type="submit">Submit</SubmitButton>
+            </TransactionForm>
+          </>
+        )}
       </PageWrapper>
     </>
   );
