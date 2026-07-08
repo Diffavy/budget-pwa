@@ -15,6 +15,13 @@ const THEME = {
   },
 };
 
+const NATIONS = {
+  // for currency data
+  UK: { label: "United Kingdom", currency: "GBP", symbol: "£" },
+  US: { label: "United States", currency: "USD", symbol: "$" },
+  EU: { label: "Eurozone", currency: "EUR", symbol: "€" },
+};
+
 const baseButtonStyle = css`
   all: unset;
   cursor: pointer;
@@ -330,24 +337,43 @@ function App() {
   const [category, setCategory] = useState("");
   const [session, setSession] = useState(null);
   const [transactions, setTransactions] = useState([]); //to hold exisiting transactions for a given user
-  const [view, setView] = useState("ledger");
+  const [view, setView] = useState("ledger"); // for toggling between profile and ledger pages
+  const [profile, setProfile] = useState(null); // for holding profile data of a user
 
   useEffect(() => {
-    const fetchTransactions = async () => {
-      const { data, error } = await supabase
+    const fetchUserData = async () => {
+      const { data: transactionData, error: transactionError } = await supabase
         .from("transactions")
         .select("*")
         .eq("user_id", session?.user?.id); // pulls data only relevant to current user
 
-      if (error) {
-        console.error("Error occured whilst fetching data", error.message);
-      } else if (data) {
-        setTransactions(data);
+      if (transactionError) {
+        console.error(
+          "Error occured whilst fetching transaction data",
+          transactionError.message,
+        );
+      } else if (transactionData) {
+        setTransactions(transactionData);
+      }
+
+      const { data: profileData, error: profileError } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", session?.user?.id)
+        .single();
+
+      if (profileError) {
+        console.error(
+          "Error occurred whilst fetching profile data",
+          profileError.message,
+        );
+      } else if (profileData) {
+        setProfile(profileData);
       }
     };
 
     if (session?.user?.id) {
-      fetchTransactions();
+      fetchUserData();
     }
   }, [session]);
 
@@ -375,7 +401,7 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { data, error } = await supabase // inserting an amount value to table
+    const { transactionData, transactionError } = await supabase // inserting an amount value to table
       .from("transactions")
       .insert([
         {
@@ -388,21 +414,24 @@ function App() {
       ])
       .select(); // return the inserted row
 
-    if (error) {
-      console.log(error);
-    } else if (data && data.length > 0) {
+    if (transactionError) {
+      console.log(transactionError);
+    } else if (transactionData && transactionData.length > 0) {
       alert("Sent to database!");
-      const addedTransaction = data[0]; // Get the inserted transaction
+      const addedTransaction = transactionData[0]; // Get the inserted transaction
       setTransactions((prev) => [addedTransaction, ...prev]); // Update state with the new transaction, no lag as we don't rerun useEffect script and update immediately
       setAmount("");
     }
   };
 
   const handleDelete = async (id) => {
-    const { error } = await supabase.from("transactions").delete().eq("id", id);
+    const { transactionError } = await supabase
+      .from("transactions")
+      .delete()
+      .eq("id", id);
 
-    if (error) {
-      console.error("Error deleting transaction: ", error.message);
+    if (transactionError) {
+      console.error("Error deleting transaction: ", transactionError.message);
     } else {
       alert("Transaction deleted!");
       setTransactions((prev) => prev.filter((t) => t.id !== id)); // Update state to remove the deleted transaction
@@ -417,6 +446,19 @@ function App() {
     } else {
       alert("Logged out!");
       console.log("Logged out successfully");
+    }
+  };
+
+  const handleCountryChange = async (newCountryCode) => {
+    setProfile((prev) => ({ ...prev, country_code: newCountryCode }));
+
+    const { error } = await supabase
+      .from("profiles")
+      .update({ country_code: newCountryCode })
+      .eq("id", session?.user?.id);
+
+    if (error) {
+      console.error("Error when updating country code", error.message);
     }
   };
 
@@ -445,7 +487,18 @@ function App() {
         </ProfileButton>
 
         {view === "profile" ? (
-          <ProfileWrapper></ProfileWrapper>
+          <ProfileWrapper>
+            <select
+              value={profile?.country_code || "UK"}
+              onChange={(e) => {
+                handleCountryChange(e.target.value);
+              }}
+            >
+              <option value="UK">United Kingdom (GBP)</option>
+              <option value="US">United States (USD)</option>
+              <option value="EU">Eurozone (EUR)</option>
+            </select>
+          </ProfileWrapper>
         ) : (
           <>
             <LedgerHeader>My Transactions :</LedgerHeader>
