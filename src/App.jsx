@@ -452,13 +452,16 @@ function App() {
   const handleCountryChange = async (newCountryCode) => {
     setProfile((prev) => ({ ...prev, country_code: newCountryCode }));
 
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from("profiles")
       .update({ country_code: newCountryCode })
-      .eq("id", session?.user?.id);
+      .eq("id", session?.user?.id)
+      .select();
 
     if (error) {
       console.error("Error when updating country code", error.message);
+    } else {
+      console.log(data, "updated successfully");
     }
   };
 
@@ -475,6 +478,9 @@ function App() {
   const totalAmount = transactions.reduce((total, t) => {
     return t.type === "income" ? total + t.amount : total - t.amount;
   }, 0);
+
+  const activeCountry = profile?.country_code || "UK";
+  const currencySymbol = NATIONS[activeCountry]?.symbol;
 
   return (
     <>
@@ -516,6 +522,7 @@ function App() {
                       <hr></hr>
                       <hr></hr>
                       <TransactionAmount $type={t.type}>
+                        {currencySymbol}
                         {(t.amount || 0).toFixed(2)}
                       </TransactionAmount>
                       <DeleteButton onClick={() => handleDelete(t.id)}>
@@ -532,6 +539,7 @@ function App() {
                         <OtherText>{capitalizeWord(t.category)}</OtherText>
                       ) : null}
                       <TransactionAmount $type={t.type}>
+                        {currencySymbol}
                         {(t.amount || 0).toFixed(2)}
                       </TransactionAmount>
                       <DeleteButton onClick={() => handleDelete(t.id)}>
@@ -541,7 +549,8 @@ function App() {
                   ),
                 )}
               <BalanceDisplay $balance={totalAmount}>
-                Balance: {totalAmount.toFixed(2)}
+                Balance: {currencySymbol}
+                {totalAmount.toFixed(2)}
               </BalanceDisplay>
             </LedgerWrapper>
             <TransactionForm onSubmit={handleSubmit}>
