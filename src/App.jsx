@@ -66,6 +66,27 @@ const LedgerWrapper = styled.div`
 
 const ProfileWrapper = styled.div``;
 
+const CurrencySelect = styled.select`
+  all: unset;
+  display: fit-content;
+  margin: 20px auto;
+  width: 150px;
+  height: 25px;
+  background-color: ${THEME.colors.text};
+  border: solid 1px rgb(40, 40, 40);
+  color: ${THEME.colors.buttonBackground};
+  padding: 2px;
+  font-size: 0.75rem;
+  border-radius: 5px;
+  text-align: center;
+  font-weight: 550;
+`;
+
+const CurrencyOption = styled.option`
+  all: unset;
+  text-align: center;
+`;
+
 const TransactionRow = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr auto;
@@ -494,16 +515,27 @@ function App() {
 
         {view === "profile" ? (
           <ProfileWrapper>
-            <select
+            <OtherText>Profile Page</OtherText>
+            <br></br>
+            <OtherText>Name: {profile?.name || "Not specified"}</OtherText>
+            <br></br>
+            <OtherText>Email: {profile?.email || "Not specified"}</OtherText>
+            <br></br>
+            <OtherText>
+              Bank Detail: {profile?.bank || "Not specified"}
+            </OtherText>
+            <br></br>
+            <OtherText>Current Country: </OtherText>
+            <CurrencySelect
               value={profile?.country_code || "UK"}
               onChange={(e) => {
                 handleCountryChange(e.target.value);
               }}
             >
-              <option value="UK">United Kingdom (GBP)</option>
-              <option value="US">United States (USD)</option>
-              <option value="EU">Eurozone (EUR)</option>
-            </select>
+              <CurrencyOption value="UK">United Kingdom (GBP)</CurrencyOption>
+              <CurrencyOption value="US">United States (USD)</CurrencyOption>
+              <CurrencyOption value="EU">Eurozone (EUR)</CurrencyOption>
+            </CurrencySelect>
           </ProfileWrapper>
         ) : (
           <>
