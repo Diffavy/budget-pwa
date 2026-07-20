@@ -64,7 +64,42 @@ const LedgerWrapper = styled.div`
   border-right: solid 1.5px ${THEME.colors.buttonHover};
 `;
 
-const ProfileWrapper = styled.div``;
+const ProfileWrapper = styled.div`
+  width: 100%;
+  margin: 20px auto 0 auto;
+  max-width: 400px;
+  padding: 0 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+const ProfileRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
+`;
+const ProfileHeader = styled.h1`
+  text-align: center;
+  font-size: 1.5rem;
+  color: ${THEME.colors.text};
+  font-weight: 600;
+`;
+
+const ProfileLabel = styled.h2`
+  text-align: left;
+  font-size: 1.2rem;
+  display: inline-block;
+  color: ${THEME.colors.text};
+`;
+
+const ProfileContent = styled.p`
+  text-align: right;
+  font-size: 1.1rem;
+  display: inline-block;
+  color: ${THEME.colors.text};
+`;
 
 const CurrencySelect = styled.select`
   all: unset;
@@ -515,17 +550,35 @@ function App() {
 
         {view === "profile" ? (
           <ProfileWrapper>
-            <OtherText>Profile Page</OtherText>
+            <ProfileHeader>My Profile</ProfileHeader>
             <br></br>
-            <OtherText>Name: {profile?.name || "Not specified"}</OtherText>
+            <ProfileRow>
+              <ProfileLabel>Name:</ProfileLabel>
+              <ProfileContent>
+                {profile?.name || "Not specified"}
+              </ProfileContent>
+            </ProfileRow>
             <br></br>
-            <OtherText>Email: {profile?.email || "Not specified"}</OtherText>
+            <ProfileRow>
+              <ProfileLabel>Email:</ProfileLabel>
+              <ProfileContent>
+                {profile?.email || "Not specified"}
+              </ProfileContent>
+            </ProfileRow>
             <br></br>
-            <OtherText>
-              Bank Detail: {profile?.bank || "Not specified"}
-            </OtherText>
+            <ProfileRow>
+              <ProfileLabel>Bank Detail:</ProfileLabel>
+              <ProfileContent>
+                {profile?.bank || "Not specified"}
+              </ProfileContent>
+            </ProfileRow>
             <br></br>
-            <OtherText>Current Country: </OtherText>
+            <ProfileRow>
+              <ProfileLabel>Current Country:</ProfileLabel>
+              <ProfileContent>
+                {NATIONS[profile?.country_code]?.name || "Not specified"}
+              </ProfileContent>
+            </ProfileRow>
             <CurrencySelect
               value={profile?.country_code || "UK"}
               onChange={(e) => {
