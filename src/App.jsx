@@ -67,7 +67,7 @@ const LedgerWrapper = styled.div`
 const ProfileWrapper = styled.div`
   width: 100%;
   margin: 20px auto 0 auto;
-  max-width: 400px;
+  max-width: 450px;
   padding: 0 30px;
   display: flex;
   flex-direction: column;
@@ -90,31 +90,43 @@ const ProfileHeader = styled.h1`
 const ProfileLabel = styled.h2`
   text-align: left;
   font-size: 1.2rem;
-  display: inline-block;
   color: ${THEME.colors.text};
+  font-weight: 500;
+  border-bottom: solid 1px ${THEME.colors.buttonHover};
 `;
 
 const ProfileContent = styled.p`
   text-align: right;
   font-size: 1.1rem;
-  display: inline-block;
   color: ${THEME.colors.text};
 `;
 
+const EditButton = styled.button`
+  ${baseButtonStyle}
+  font-size: 1rem;
+  padding: 2px 5px;
+  border-radius: 5px;
+  color: ${THEME.colors.buttonFocus};
+  font-weight: 550;
+  margin-left: 10px;
+
+  &:hover {
+    transform: scale(1.1);
+    color: ${THEME.colors.text};
+`;
 const CurrencySelect = styled.select`
   all: unset;
   display: fit-content;
   margin: 20px auto;
-  width: 150px;
+  width: 200px;
   height: 25px;
-  background-color: ${THEME.colors.text};
-  border: solid 1px rgb(40, 40, 40);
-  color: ${THEME.colors.buttonBackground};
+  border: solid 1px ${THEME.colors.buttonHover};
+  color: ${THEME.colors.text};
   padding: 2px;
-  font-size: 0.75rem;
+  font-size: 1rem;
   border-radius: 5px;
   text-align: center;
-  font-weight: 550;
+  font-weight: 500;
 `;
 
 const CurrencyOption = styled.option`
@@ -553,9 +565,18 @@ function App() {
             <ProfileHeader>My Profile</ProfileHeader>
             <br></br>
             <ProfileRow>
+              <ProfileLabel>Username:</ProfileLabel>
+              <ProfileContent>
+                {profile?.username || "Not specified"}
+                <EditButton>✎</EditButton>
+              </ProfileContent>
+            </ProfileRow>
+            <br></br>
+            <ProfileRow>
               <ProfileLabel>Name:</ProfileLabel>
               <ProfileContent>
                 {profile?.name || "Not specified"}
+                <EditButton>✎</EditButton>
               </ProfileContent>
             </ProfileRow>
             <br></br>
@@ -563,32 +584,37 @@ function App() {
               <ProfileLabel>Email:</ProfileLabel>
               <ProfileContent>
                 {profile?.email || "Not specified"}
+                <EditButton>✎</EditButton>
               </ProfileContent>
             </ProfileRow>
             <br></br>
             <ProfileRow>
-              <ProfileLabel>Bank Detail:</ProfileLabel>
+              <ProfileLabel>Bank Details:</ProfileLabel>
               <ProfileContent>
                 {profile?.bank || "Not specified"}
+                <EditButton>✎</EditButton>
               </ProfileContent>
             </ProfileRow>
             <br></br>
             <ProfileRow>
               <ProfileLabel>Current Country:</ProfileLabel>
               <ProfileContent>
-                {NATIONS[profile?.country_code]?.name || "Not specified"}
+                <CurrencySelect
+                  value={profile?.country_code || "UK"}
+                  onChange={(e) => {
+                    handleCountryChange(e.target.value);
+                  }}
+                >
+                  <CurrencyOption value="UK">
+                    United Kingdom (GBP)
+                  </CurrencyOption>
+                  <CurrencyOption value="US">
+                    United States (USD)
+                  </CurrencyOption>
+                  <CurrencyOption value="EU">Eurozone (EUR)</CurrencyOption>
+                </CurrencySelect>
               </ProfileContent>
             </ProfileRow>
-            <CurrencySelect
-              value={profile?.country_code || "UK"}
-              onChange={(e) => {
-                handleCountryChange(e.target.value);
-              }}
-            >
-              <CurrencyOption value="UK">United Kingdom (GBP)</CurrencyOption>
-              <CurrencyOption value="US">United States (USD)</CurrencyOption>
-              <CurrencyOption value="EU">Eurozone (EUR)</CurrencyOption>
-            </CurrencySelect>
           </ProfileWrapper>
         ) : (
           <>
