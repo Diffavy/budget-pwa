@@ -122,7 +122,7 @@ const CurrencySelect = styled.select`
   height: 25px;
   border: solid 1px ${THEME.colors.buttonHover};
   color: ${THEME.colors.text};
-  padding: 2px;
+  padding: 3px;
   font-size: 1rem;
   border-radius: 5px;
   text-align: center;
@@ -132,6 +132,7 @@ const CurrencySelect = styled.select`
 const CurrencyOption = styled.option`
   all: unset;
   text-align: center;
+  color: ${THEME.colors.text};
 `;
 
 const TransactionRow = styled.div`
@@ -407,6 +408,8 @@ function App() {
   const [transactions, setTransactions] = useState([]); //to hold exisiting transactions for a given user
   const [view, setView] = useState("ledger"); // for toggling between profile and ledger pages
   const [profile, setProfile] = useState(null); // for holding profile data of a user
+  const [editingField, setEditingField] = useState(null); // for tracking which profile field is being edited
+  const [editedValue, setEditedValue] = useState(""); // for holding the edited value of a profile field
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -533,6 +536,24 @@ function App() {
     }
   };
 
+  const handleProfileFieldEdit = async () => {
+    if (!editingField) return;
+
+    setProfile((prev) => ({ ...prev, [editingField]: editedValue })); // Optimistic update
+
+    const { error } = await supabase
+      .from("profiles")
+      .update({ [editingField]: editedValue })
+      .eq("id", session?.user?.id);
+
+    if (error) {
+      console.error(`Error updating ${editingField}:`, error.message);
+    } else {
+      setEditingField(null);
+      setEditedValue("");
+    }
+  };
+
   const flowTypes = ["daily", "subscription", "one-off"];
 
   const categories = {
@@ -567,8 +588,31 @@ function App() {
             <ProfileRow>
               <ProfileLabel>Username:</ProfileLabel>
               <ProfileContent>
-                {profile?.username || "Not specified"}
-                <EditButton>✎</EditButton>
+                {editingField === "username" ? (
+                  <>
+                    <input
+                      type="text"
+                      value={editedValue}
+                      onChange={(e) => setEditedValue(e.target.value)}
+                    />
+                    <button onClick={handleProfileFieldEdit}>Save</button>
+                    <button onClick={() => setEditingField(null)}>
+                      Cancel
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    {profile?.username || "Not specified"}
+                    <EditButton
+                      onClick={() => {
+                        setEditingField("username");
+                        setEditedValue(profile?.username || "");
+                      }}
+                    >
+                      ✎
+                    </EditButton>
+                  </>
+                )}
               </ProfileContent>
             </ProfileRow>
             <br></br>
