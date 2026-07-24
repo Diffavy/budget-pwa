@@ -114,6 +114,19 @@ const EditButton = styled.button`
     transform: scale(1.1);
     color: ${THEME.colors.text};
 `;
+
+const CancelEditButton = styled(EditButton)`
+  &:hover {
+    color: ${THEME.colors.expense};
+  }
+`;
+
+const SaveEditButton = styled(EditButton)`
+  &:hover {
+    color: ${THEME.colors.income};
+  }
+`;
+
 const CurrencySelect = styled.select`
   all: unset;
   display: fit-content;
@@ -595,10 +608,12 @@ function App() {
                       value={editedValue}
                       onChange={(e) => setEditedValue(e.target.value)}
                     />
-                    <button onClick={handleProfileFieldEdit}>Save</button>
-                    <button onClick={() => setEditingField(null)}>
-                      Cancel
-                    </button>
+                    <SaveEditButton onClick={handleProfileFieldEdit}>
+                      ✔
+                    </SaveEditButton>
+                    <CancelEditButton onClick={() => setEditingField(null)}>
+                      ✖
+                    </CancelEditButton>
                   </>
                 ) : (
                   <>
@@ -619,16 +634,66 @@ function App() {
             <ProfileRow>
               <ProfileLabel>Name:</ProfileLabel>
               <ProfileContent>
-                {profile?.name || "Not specified"}
-                <EditButton>✎</EditButton>
+                {editingField === "name" ? (
+                  <>
+                    <input
+                      type="text"
+                      value={editedValue}
+                      onChange={(e) => setEditedValue(e.target.value)}
+                    />
+                    <SaveEditButton onClick={handleProfileFieldEdit}>
+                      ✔
+                    </SaveEditButton>
+                    <CancelEditButton onClick={() => setEditingField(null)}>
+                      ✖
+                    </CancelEditButton>
+                  </>
+                ) : (
+                  <>
+                    {profile?.name || "Not specified"}
+                    <EditButton
+                      onClick={() => {
+                        setEditingField("name");
+                        setEditedValue(profile?.name || "");
+                      }}
+                    >
+                      ✎
+                    </EditButton>
+                  </>
+                )}
               </ProfileContent>
             </ProfileRow>
             <br></br>
             <ProfileRow>
               <ProfileLabel>Email:</ProfileLabel>
               <ProfileContent>
-                {profile?.email || "Not specified"}
-                <EditButton>✎</EditButton>
+                {editingField === "email" ? (
+                  <>
+                    <input
+                      type="text"
+                      value={editedValue}
+                      onChange={(e) => setEditedValue(e.target.value)}
+                    />
+                    <SaveEditButton onClick={handleProfileFieldEdit}>
+                      ✔
+                    </SaveEditButton>
+                    <CancelEditButton onClick={() => setEditingField(null)}>
+                      ✖
+                    </CancelEditButton>
+                  </>
+                ) : (
+                  <>
+                    {profile?.email || "Not specified"}
+                    <EditButton
+                      onClick={() => {
+                        setEditingField("email");
+                        setEditedValue(profile?.email || "");
+                      }}
+                    >
+                      ✎
+                    </EditButton>
+                  </>
+                )}
               </ProfileContent>
             </ProfileRow>
             <br></br>
