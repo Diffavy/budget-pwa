@@ -101,6 +101,16 @@ const ProfileContent = styled.p`
   color: ${THEME.colors.text};
 `;
 
+const ProfileEditInput = styled.input`
+  all: unset;
+  text-align: center;
+  font-size: 0.8rem;
+  display: fit-content;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: ${THEME.colors.buttonBackground};
+`;
+
 const EditButton = styled.button`
   ${baseButtonStyle}
   font-size: 1rem;
@@ -135,6 +145,7 @@ const CurrencySelect = styled.select`
   height: 25px;
   border: solid 1px ${THEME.colors.buttonHover};
   color: ${THEME.colors.text};
+  background-color: ${THEME.colors.buttonBackground};
   padding: 3px;
   font-size: 1rem;
   border-radius: 5px;
@@ -150,7 +161,7 @@ const CurrencyOption = styled.option`
 
 const TransactionRow = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr auto;
+  grid-template-columns: 1fr 1fr 1fr 1fr auto auto;
   justify-content: space-between;
   align-items: center;
   gap: 10px;
@@ -190,19 +201,15 @@ const TransactionAmount = styled.span`
 
 const DeleteButton = styled.button`
   ${baseButtonStyle}
-  font-size: 1rem;
+  font-size: 1.1rem;
   padding: 2px 5px;
   border-radius: 5px;
   color: ${THEME.colors.buttonFocus};
-  background-color: ${THEME.colors.buttonHover};
   font-weight: 550;
 
   &:hover {
-    transform: scale(1.05);
+    transform: scale(1.2);
     color: ${THEME.colors.text};
-    box-shadow:
-      rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset,
-      rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
   }
 
   &:active {
@@ -398,7 +405,7 @@ const SubmitButton = styled.button`
   color: ${THEME.colors.buttonBackground};
 
   &:hover {
-    background-color: ${THEME.colors.buttonHover};
+    background-color: ${THEME.colors.buttonFocus};
     transform: scale(1.05);
   }
 
@@ -567,6 +574,8 @@ function App() {
     }
   };
 
+  const handleTransactionEdit = async () => {};
+
   const flowTypes = ["daily", "subscription", "one-off"];
 
   const categories = {
@@ -603,7 +612,7 @@ function App() {
               <ProfileContent>
                 {editingField === "username" ? (
                   <>
-                    <input
+                    <ProfileEditInput
                       type="text"
                       value={editedValue}
                       onChange={(e) => setEditedValue(e.target.value)}
@@ -636,7 +645,7 @@ function App() {
               <ProfileContent>
                 {editingField === "name" ? (
                   <>
-                    <input
+                    <ProfileEditInput
                       type="text"
                       value={editedValue}
                       onChange={(e) => setEditedValue(e.target.value)}
@@ -669,7 +678,7 @@ function App() {
               <ProfileContent>
                 {editingField === "email" ? (
                   <>
-                    <input
+                    <ProfileEditInput
                       type="text"
                       value={editedValue}
                       onChange={(e) => setEditedValue(e.target.value)}
@@ -745,8 +754,9 @@ function App() {
                         {currencySymbol}
                         {(t.amount || 0).toFixed(2)}
                       </TransactionAmount>
+                      <EditButton>✎</EditButton>
                       <DeleteButton onClick={() => handleDelete(t.id)}>
-                        Delete
+                        🗑
                       </DeleteButton>
                     </TransactionRow>
                   ) : (
@@ -762,8 +772,9 @@ function App() {
                         {currencySymbol}
                         {(t.amount || 0).toFixed(2)}
                       </TransactionAmount>
+                      <EditButton>✎</EditButton>
                       <DeleteButton onClick={() => handleDelete(t.id)}>
-                        Delete
+                        🗑
                       </DeleteButton>
                     </TransactionRow>
                   ),
