@@ -707,6 +707,39 @@ function App() {
             </ProfileRow>
             <br></br>
             <ProfileRow>
+              <ProfileLabel>Phone Number:</ProfileLabel>
+              <ProfileContent>
+                {editingField === "phone" ? (
+                  <>
+                    <ProfileEditInput
+                      type="text"
+                      value={editedValue}
+                      onChange={(e) => setEditedValue(e.target.value)}
+                    />
+                    <SaveEditButton onClick={handleProfileFieldEdit}>
+                      ✔
+                    </SaveEditButton>
+                    <CancelEditButton onClick={() => setEditingField(null)}>
+                      ✖
+                    </CancelEditButton>
+                  </>
+                ) : (
+                  <>
+                    {profile?.phone || "Not specified"}
+                    <EditButton
+                      onClick={() => {
+                        setEditingField("phone");
+                        setEditedValue(profile?.phone || "");
+                      }}
+                    >
+                      ✎
+                    </EditButton>
+                  </>
+                )}
+              </ProfileContent>
+            </ProfileRow>
+            <br></br>
+            <ProfileRow>
               <ProfileLabel>Bank Details:</ProfileLabel>
               <ProfileContent>
                 {profile?.bank || "Not specified"}
