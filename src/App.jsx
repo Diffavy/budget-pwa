@@ -430,6 +430,13 @@ function App() {
   const [profile, setProfile] = useState(null); // for holding profile data of a user
   const [editingField, setEditingField] = useState(null); // for tracking which profile field is being edited
   const [editedValue, setEditedValue] = useState(""); // for holding the edited value of a profile field
+  const [editingTransactionId, setEditingTransactionId] = useState(null); // for tracking which transaction is being edited
+  const [editingTransactionData, setEditingTransactionData] = useState({
+    amount: "",
+    type: "",
+    flow_type: "",
+    category: "",
+  }); // for holding the edited data of a transaction`
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -574,7 +581,40 @@ function App() {
     }
   };
 
-  const handleTransactionEdit = async () => {};
+  const handleTransactionEdit = async () => {
+    const updatedAmount = parseFloat(editingTransactionData.amount);
+    if (!editingTransactionId) return;
+    
+    setTransactions((prev) =>
+      prev.map((t) =>
+        t.id === editingTransactionId
+          ? {
+              ...t,
+              amount: updatedAmount,
+              type: editingTransactionData.type,
+              flow_type: editingTransactionData.flow_type,
+              category: editingTransactionData.category,
+            }
+          : t,
+      ),
+    ); // Optimistic update
+
+    const { error } = await supabase
+      .from("transactions")
+      .update({
+        amount: updatedAmount,
+        type: editingTransactionData.type,
+        flow_type: editingTransactionData.flow_type,
+        category: editingTransactionData.category,
+      })
+      .eq("id", editingTransactionId);
+
+    if (error) {
+      console.error("Error updating transaction:", error.message);
+    } else {
+       seteditingTransactionId(null);
+
+  };  
 
   const flowTypes = ["daily", "subscription", "one-off"];
 
