@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { supabase } from "./supabaseClient";
 import styled, { css } from "styled-components";
 import Auth from "./Auth";
@@ -141,7 +141,7 @@ const CurrencySelect = styled.select`
   all: unset;
   display: fit-content;
   margin: 20px auto;
-  width: 200px;
+  width: 65px;
   height: 25px;
   border: solid 1px ${THEME.colors.buttonHover};
   color: ${THEME.colors.text};
@@ -395,6 +395,13 @@ const AmountInput = styled.input`
   }
 `;
 
+const TransactionInputEdit = styled.input`
+  all: unset;
+  border-radius: 3px;
+  background-color: ${THEME.colors.buttonBackground};
+  width: 100px;
+`;
+
 const SubmitButton = styled.button`
   ${baseButtonStyle}
   font-size: 1rem;
@@ -418,6 +425,35 @@ const SubmitButton = styled.button`
 const capitalizeWord = (s) => {
   return s.charAt(0).toUpperCase() + s.slice(1);
 };
+
+function ProjectModal({ isOpen, onClose, children }) {
+  const dialogRef = useRef(null);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    if (isOpen) {
+      dialog.showModal();
+      document.body.style.overflow = "hidden";
+    } else {
+      dialog.close();
+      document.body.style.overflow = "";
+    }
+  }, [isOpen]);
+
+  const handleOutsideClick = (event) => {
+    if (event.target === dialogRef.current) {
+      onClose();
+    }
+  };
+
+  return (
+    <dialog ref={dialogRef} onClick={handleOutsideClick}>
+      {children}
+    </dialog>
+  );
+}
 
 function App() {
   const [amount, setAmount] = useState("");
@@ -581,10 +617,12 @@ function App() {
     }
   };
 
-  const handleTransactionEdit = async () => {
+  const handleTransactionEdit = async (id) => {
     const updatedAmount = parseFloat(editingTransactionData.amount);
     if (!editingTransactionId) return;
-    
+
+    setEditingTransactionId(id);
+
     setTransactions((prev) =>
       prev.map((t) =>
         t.id === editingTransactionId
@@ -612,9 +650,9 @@ function App() {
     if (error) {
       console.error("Error updating transaction:", error.message);
     } else {
-       seteditingTransactionId(null);
-
-  };  
+      setEditingTransactionId(null);
+    }
+  };
 
   const flowTypes = ["daily", "subscription", "one-off"];
 
@@ -819,19 +857,90 @@ function App() {
               {transactions.length !== 0 &&
                 transactions.map((t) =>
                   t.type === "income" ? (
-                    <TransactionRow key={t.id}>
-                      <RowHeader>Income</RowHeader>
-                      <hr></hr>
-                      <hr></hr>
-                      <TransactionAmount $type={t.type}>
-                        {currencySymbol}
-                        {(t.amount || 0).toFixed(2)}
-                      </TransactionAmount>
-                      <EditButton>✎</EditButton>
-                      <DeleteButton onClick={() => handleDelete(t.id)}>
-                        🗑
-                      </DeleteButton>
-                    </TransactionRow>
+                    <>
+                      <div>
+                        <TransactionRow key={t.id}>
+                          <RowHeader>Income</RowHeader>
+                          <hr></hr>
+                          <hr></hr>
+                          <TransactionAmount $type={t.type}>
+                            {currencySymbol}
+                            {(t.amount || 0).toFixed(2)}
+                          </TransactionAmount>
+                          <EditButton
+                            onClick={() => {
+                              setEditingTransactionId(t.id);
+                              setEditingTransactionData({
+                                amount: t.amount,
+                                type: t.type,
+                                flow_type: t.flow_type,
+                                category: t.category,
+                              });
+                            }}
+                          >
+                            ✎
+                          </EditButton>
+                          <DeleteButton onClick={() => handleDelete(t.id)}>
+                            🗑
+                          </DeleteButton>
+                        </TransactionRow>
+                        <ProjectModal
+                          isOpen={editingTransactionId === t.id}
+                          onClose={() => {
+                            setEditingTransactionId(null);
+                          }}
+                        >
+                          <CurrencySelect>
+                            <option value="income">Income</option>
+                            <option value="expense">Expense</option>
+                          </CurrencySelect>
+                          <TransactionInputEdit
+                            type="text"
+                            placeholder="category"
+                            value={editingTransactionData.category}
+                            onChange={(e) =>
+                              setEditingTransactionData((prev) => ({
+                                ...prev,
+                                category: e.target.value,
+                              }))
+                            }
+                          />
+                          <TransactionInputEdit
+                            type="text"
+                            placeholder="flow type"
+                            value={editingTransactionData.flow_type}
+                            onChange={(e) =>
+                              setEditingTransactionData((prev) => ({
+                                ...prev,
+                                flow_type: e.target.value,
+                              }))
+                            }
+                          />
+                          <TransactionInputEdit
+                            type="text"
+                            placeholder="amount"
+                            value={editingTransactionData.amount}
+                            onChange={(e) =>
+                              setEditingTransactionData((prev) => ({
+                                ...prev,
+                                amount: e.target.value,
+                              }))
+                            }
+                          />
+                          <SaveEditButton onClick={handleProfileFieldEdit}>
+                            ✔
+                          </SaveEditButton>
+                          <CancelEditButton
+                            onClick={() => {
+                              setEditingField(null);
+                              closeModal();
+                            }}
+                          >
+                            ✖
+                          </CancelEditButton>
+                        </ProjectModal>
+                      </div>
+                    </>
                   ) : (
                     <TransactionRow key={t.id}>
                       <RowHeader>Expense</RowHeader>
@@ -845,7 +954,14 @@ function App() {
                         {currencySymbol}
                         {(t.amount || 0).toFixed(2)}
                       </TransactionAmount>
-                      <EditButton>✎</EditButton>
+                      <EditButton
+                        onClick={() => {
+                          setEditingTransactionId(t.id);
+                          handleTransactionEdit(t.id);
+                        }}
+                      >
+                        ✎
+                      </EditButton>
                       <DeleteButton onClick={() => handleDelete(t.id)}>
                         🗑
                       </DeleteButton>
