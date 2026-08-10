@@ -891,24 +891,13 @@ function App() {
                           }}
                         >
                           <CurrencySelect>
-                            <option value="income">Income</option>
-                            <option value="expense">Expense</option>
+                            <option value="expense">Income</option>
+                            <option value="income">Expense</option>
                           </CurrencySelect>
                           <TransactionInputEdit
                             type="text"
-                            placeholder="category"
-                            value={editingTransactionData.category}
-                            onChange={(e) =>
-                              setEditingTransactionData((prev) => ({
-                                ...prev,
-                                category: e.target.value,
-                              }))
-                            }
-                          />
-                          <TransactionInputEdit
-                            type="text"
                             placeholder="flow type"
-                            value={editingTransactionData.flow_type}
+                            value={t.flow_type}
                             onChange={(e) =>
                               setEditingTransactionData((prev) => ({
                                 ...prev,
@@ -918,8 +907,19 @@ function App() {
                           />
                           <TransactionInputEdit
                             type="text"
+                            placeholder="category"
+                            value={t.category}
+                            onChange={(e) =>
+                              setEditingTransactionData((prev) => ({
+                                ...prev,
+                                category: e.target.value,
+                              }))
+                            }
+                          />
+                          <TransactionInputEdit
+                            type="text"
                             placeholder="amount"
-                            value={editingTransactionData.amount}
+                            value={t.amount}
                             onChange={(e) =>
                               setEditingTransactionData((prev) => ({
                                 ...prev,
@@ -942,30 +942,87 @@ function App() {
                       </div>
                     </>
                   ) : (
-                    <TransactionRow key={t.id}>
-                      <RowHeader>Expense</RowHeader>
-                      <FlowTypeHeader>
-                        {capitalizeWord(t.flow_type)}
-                      </FlowTypeHeader>
-                      {t.category ? (
-                        <OtherText>{capitalizeWord(t.category)}</OtherText>
-                      ) : null}
-                      <TransactionAmount $type={t.type}>
-                        {currencySymbol}
-                        {(t.amount || 0).toFixed(2)}
-                      </TransactionAmount>
-                      <EditButton
-                        onClick={() => {
-                          setEditingTransactionId(t.id);
-                          handleTransactionEdit(t.id);
+                    <>
+                      <TransactionRow key={t.id}>
+                        <RowHeader>Expense</RowHeader>
+                        <FlowTypeHeader>
+                          {capitalizeWord(t.flow_type)}
+                        </FlowTypeHeader>
+                        {t.category ? (
+                          <OtherText>{capitalizeWord(t.category)}</OtherText>
+                        ) : null}
+                        <TransactionAmount $type={t.type}>
+                          {currencySymbol}
+                          {(t.amount || 0).toFixed(2)}
+                        </TransactionAmount>
+                        <EditButton
+                          onClick={() => {
+                            setEditingTransactionId(t.id);
+                            handleTransactionEdit(t.id);
+                          }}
+                        >
+                          ✎
+                        </EditButton>
+                        <DeleteButton onClick={() => handleDelete(t.id)}>
+                          🗑
+                        </DeleteButton>
+                      </TransactionRow>
+                      <ProjectModal
+                        isOpen={editingTransactionId === t.id}
+                        onClose={() => {
+                          setEditingTransactionId(null);
                         }}
                       >
-                        ✎
-                      </EditButton>
-                      <DeleteButton onClick={() => handleDelete(t.id)}>
-                        🗑
-                      </DeleteButton>
-                    </TransactionRow>
+                        <CurrencySelect>
+                          <option value="income">Expense</option>
+                          <option value="expense">Income</option>
+                        </CurrencySelect>
+                        <TransactionInputEdit
+                          type="text"
+                          placeholder="flow type"
+                          value={t.flow_type}
+                          onChange={(e) =>
+                            setEditingTransactionData((prev) => ({
+                              ...prev,
+                              flow_type: e.target.value,
+                            }))
+                          }
+                        />
+                        <TransactionInputEdit
+                          type="text"
+                          placeholder="category"
+                          value={t.category}
+                          onChange={(e) =>
+                            setEditingTransactionData((prev) => ({
+                              ...prev,
+                              category: e.target.value,
+                            }))
+                          }
+                        />
+                        <TransactionInputEdit
+                          type="text"
+                          placeholder="amount"
+                          value={t.amount}
+                          onChange={(e) =>
+                            setEditingTransactionData((prev) => ({
+                              ...prev,
+                              amount: e.target.value,
+                            }))
+                          }
+                        />
+                        <SaveEditButton onClick={handleProfileFieldEdit}>
+                          ✔
+                        </SaveEditButton>
+                        <CancelEditButton
+                          onClick={() => {
+                            setEditingField(null);
+                            closeModal();
+                          }}
+                        >
+                          ✖
+                        </CancelEditButton>
+                      </ProjectModal>
+                    </>
                   ),
                 )}
               <BalanceDisplay $balance={totalAmount}>
