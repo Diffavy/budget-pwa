@@ -140,15 +140,15 @@ const SaveEditButton = styled(EditButton)`
 const CurrencySelect = styled.select`
   all: unset;
   display: fit-content;
-  margin: 20px auto;
+  margin: 0 5px;
   width: 65px;
-  height: 25px;
+  height: 27px;
   border: solid 1px ${THEME.colors.buttonHover};
   color: ${THEME.colors.text};
   background-color: ${THEME.colors.buttonBackground};
   padding: 3px;
   font-size: 1rem;
-  border-radius: 5px;
+  border-radius: 3px;
   text-align: center;
   font-weight: 500;
 `;
@@ -400,6 +400,9 @@ const TransactionInputEdit = styled.input`
   border-radius: 3px;
   background-color: ${THEME.colors.buttonBackground};
   width: 100px;
+  color: ${THEME.colors.text};
+  padding: 5px;
+  margin: 0 5px;
 `;
 
 const SubmitButton = styled.button`
