@@ -125,6 +125,15 @@ const EditButton = styled.button`
     color: ${THEME.colors.text};
 `;
 
+const CurrencySelect = styled.select`
+  all: unset;
+  background-color: ${THEME.colors.buttonBackground};
+  width: 200px;
+  height: 30px;
+  text-align: center;
+  border-radius: 5px;
+`;
+
 const CancelEditButton = styled(EditButton)`
   &:hover {
     color: ${THEME.colors.expense};
@@ -137,7 +146,7 @@ const SaveEditButton = styled(EditButton)`
   }
 `;
 
-const CurrencySelect = styled.select`
+const FlowTypeSelect = styled.select`
   all: unset;
   display: fit-content;
   margin: 0 5px;
@@ -837,13 +846,9 @@ function App() {
                     handleCountryChange(e.target.value);
                   }}
                 >
-                  <CurrencyOption value="UK">
-                    United Kingdom (GBP)
-                  </CurrencyOption>
-                  <CurrencyOption value="US">
-                    United States (USD)
-                  </CurrencyOption>
-                  <CurrencyOption value="EU">Eurozone (EUR)</CurrencyOption>
+                  <option value="UK">United Kingdom (GBP)</option>
+                  <option value="US">United States (USD)</option>
+                  <option value="EU">Eurozone (EUR)</option>
                 </CurrencySelect>
               </ProfileContent>
             </ProfileRow>
@@ -893,10 +898,10 @@ function App() {
                             setEditingTransactionId(null);
                           }}
                         >
-                          <CurrencySelect>
+                          <FlowTypeSelect>
                             <option value="expense">Income</option>
                             <option value="income">Expense</option>
-                          </CurrencySelect>
+                          </FlowTypeSelect>
                           <TransactionInputEdit
                             type="text"
                             placeholder="flow type"
@@ -976,10 +981,10 @@ function App() {
                           setEditingTransactionId(null);
                         }}
                       >
-                        <CurrencySelect>
+                        <FlowTypeSelect>
                           <option value="income">Expense</option>
                           <option value="expense">Income</option>
-                        </CurrencySelect>
+                        </FlowTypeSelect>
                         <TransactionInputEdit
                           type="text"
                           placeholder="flow type"
