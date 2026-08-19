@@ -128,7 +128,7 @@ const EditButton = styled.button`
 const CurrencySelect = styled.select`
   all: unset;
   background-color: ${THEME.colors.buttonBackground};
-  width: 200px;
+  width: 220px;
   height: 30px;
   text-align: center;
   border-radius: 5px;
@@ -832,8 +832,42 @@ function App() {
             <ProfileRow>
               <ProfileLabel>Bank Details:</ProfileLabel>
               <ProfileContent>
-                {profile?.bank || "Not specified"}
-                <EditButton>✎</EditButton>
+                {editingField === "bank" ? (
+                  <>
+                    <div>
+                      <ProfileEditInput
+                        type="text"
+                        value={editedValue}
+                        onChange={(e) => setEditedValue(e.target.value)}
+                        placeholder="Account Number"
+                      />
+                      <ProfileEditInput
+                        type="text"
+                        value={editedValue}
+                        onChange={(e) => setEditedValue(e.target.value)}
+                        placeholder="Sort Code"
+                      />
+                    </div>
+                    <SaveEditButton onClick={handleProfileFieldEdit}>
+                      ✔
+                    </SaveEditButton>
+                    <CancelEditButton onClick={() => setEditingField(null)}>
+                      ✖
+                    </CancelEditButton>
+                  </>
+                ) : (
+                  <>
+                    {profile?.bank || "Not specified"}
+                    <EditButton
+                      onClick={() => {
+                        setEditingField("bank");
+                        setEditedValue(profile?.bank || "");
+                      }}
+                    >
+                      ✎
+                    </EditButton>
+                  </>
+                )}
               </ProfileContent>
             </ProfileRow>
             <br></br>
