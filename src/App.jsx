@@ -103,12 +103,18 @@ const ProfileContent = styled.p`
 
 const ProfileEditInput = styled.input`
   all: unset;
-  text-align: center;
   font-size: 0.8rem;
-  display: fit-content;
+  text-align: center;
   padding: 5px;
   border-radius: 5px;
   background-color: ${THEME.colors.buttonBackground};
+`;
+
+const BankInputWrapper = styled.div`
+  all: unset;
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
 `;
 
 const EditButton = styled.button`
@@ -614,11 +620,21 @@ function App() {
   const handleProfileFieldEdit = async () => {
     if (!editingField) return;
 
-    setProfile((prev) => ({ ...prev, [editingField]: editedValue })); // Optimistic update
+    let updates = {};
+
+    if (editingField === "bank") {
+      updates = {
+        account_number: editedValue.account_number,
+        sort_code: editedValue.sort_code,
+      };
+    } else {
+      updates = { [editingField]: editedValue };
+    }
+    setProfile((prev) => ({ ...prev, ...updates })); // Optimistic update
 
     const { error } = await supabase
       .from("profiles")
-      .update({ [editingField]: editedValue })
+      .update(updates)
       .eq("id", session?.user?.id);
 
     if (error) {
@@ -834,20 +850,30 @@ function App() {
               <ProfileContent>
                 {editingField === "bank" ? (
                   <>
-                    <div>
+                    <BankInputWrapper>
                       <ProfileEditInput
                         type="text"
-                        value={editedValue}
-                        onChange={(e) => setEditedValue(e.target.value)}
+                        value={editedValue.account_number || ""}
+                        onChange={(e) =>
+                          setEditedValue((prev) => ({
+                            ...prev,
+                            account_number: e.target.value,
+                          }))
+                        }
                         placeholder="Account Number"
                       />
                       <ProfileEditInput
                         type="text"
-                        value={editedValue}
-                        onChange={(e) => setEditedValue(e.target.value)}
+                        value={editedValue.sort_code || ""}
+                        onChange={(e) =>
+                          setEditedValue((prev) => ({
+                            ...prev,
+                            sort_code: e.target.value,
+                          }))
+                        }
                         placeholder="Sort Code"
                       />
-                    </div>
+                    </BankInputWrapper>
                     <SaveEditButton onClick={handleProfileFieldEdit}>
                       ✔
                     </SaveEditButton>
@@ -857,11 +883,18 @@ function App() {
                   </>
                 ) : (
                   <>
-                    {profile?.bank || "Not specified"}
+                    <div>
+                      {profile?.account_number || "A/C not specified"}
+                      <br></br>
+                      {profile?.sort_code || "Sort Code not specified"}
+                    </div>
                     <EditButton
                       onClick={() => {
                         setEditingField("bank");
-                        setEditedValue(profile?.bank || "");
+                        setEditedValue({
+                          account_number: profile?.account_number || "",
+                          sort_code: profile?.sort_code || "",
+                        });
                       }}
                     >
                       ✎
