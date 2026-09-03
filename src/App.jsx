@@ -1002,13 +1002,12 @@ function App() {
                               }))
                             }
                           />
-                          <SaveEditButton onClick={handleProfileFieldEdit}>
+                          <SaveEditButton onClick={handleTransactionEdit(t.id)}>
                             ✔
                           </SaveEditButton>
                           <CancelEditButton
                             onClick={() => {
-                              setEditingField(null);
-                              closeModal();
+                              setEditingTransactionId(null);
                             }}
                           >
                             ✖
@@ -1033,7 +1032,6 @@ function App() {
                         <EditButton
                           onClick={() => {
                             setEditingTransactionId(t.id);
-                            handleTransactionEdit(t.id);
                           }}
                         >
                           ✎
@@ -1085,13 +1083,12 @@ function App() {
                             }))
                           }
                         />
-                        <SaveEditButton onClick={handleProfileFieldEdit}>
+                        <SaveEditButton onClick={handleTransactionEdit(t.id)}>
                           ✔
                         </SaveEditButton>
                         <CancelEditButton
                           onClick={() => {
-                            setEditingField(null);
-                            closeModal();
+                            setEditingTransactionId(null);
                           }}
                         >
                           ✖
