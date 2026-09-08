@@ -129,6 +129,17 @@ const TransactionInputEdit = styled.input`
   margin: 0 5px;
 `;
 
+const DialogEdit = styled.dialog`
+  width: 520px;
+  background-color: ${rgb(160, 160, 160)};
+  border-radius: 5px;
+  border: solid 1px ${THEME.colors.buttonFocus};
+
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+`;
+
 const capitalizeWord = (s) => {
   if (!s) return "";
   return s.charAt(0).toUpperCase() + s.slice(1);
@@ -157,9 +168,9 @@ function ProjectModal({ isOpen, onClose, children }) {
   };
 
   return (
-    <dialog ref={dialogRef} onClick={handleOutsideClick}>
+    <DialogEdit ref={dialogRef} onClick={handleOutsideClick}>
       {children}
-    </dialog>
+    </DialogEdit>
   );
 }
 
