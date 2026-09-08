@@ -108,6 +108,17 @@ const AmountInput = styled.input`
   font-weight: 550;
   border: solid 1px rgb(106, 106, 106);
 
+  /* Hides spin buttons in Firefox */
+  appearance: textfield;
+  -moz-appearance: textfield;
+
+  /* Hides spin buttons in Chrome, Safari, Edge, Opera */
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
   &:focus {
     background-color: ${THEME.colors.buttonHover};
     border: solid 1px ${THEME.colors.buttonFocus};
