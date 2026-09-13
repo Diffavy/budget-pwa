@@ -131,7 +131,7 @@ const TransactionInputEdit = styled.input`
 
 const DialogEdit = styled.dialog`
   width: 520px;
-  background-color: ${rgb(160, 160, 160)};
+  background-color: rgb(160, 160, 160);
   border-radius: 5px;
   border: solid 1px ${THEME.colors.buttonFocus};
 

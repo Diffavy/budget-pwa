@@ -16,6 +16,13 @@ const PageWrapper = styled.div`
   box-sizing: border-box;
 `;
 
+const AppHeader = styled.h1`
+  color: ${THEME.colors.text};
+  margin: 35px 0 10px 0;
+  font-size: 3rem;
+  font-weight: 600;
+`;
+
 const ProfileButton = styled.button`
   ${baseButtonStyle}
   position: absolute;
@@ -138,6 +145,7 @@ function App() {
   return (
     <>
       <PageWrapper>
+        <AppHeader>Cairn</AppHeader>
         <SignOutButton onClick={handleLogout}>Log Out</SignOutButton>
         <ProfileButton
           onClick={() => setView(view === "ledger" ? "profile" : "ledger")}
