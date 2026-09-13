@@ -1,16 +1,42 @@
-# React + Vite
+# A Budget App - Cairn
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack personal finance application built with **React**, **styled-components**, and **Supabase**. The app allows users to authenticate securely, log income and expenses across customizable categories, view real-time balance totals with dynamic multi-currency support, and manage user profile details.
 
-Currently, two official plugins are available:
+## 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+* **User Authentication:** Email and password sign-up/login powered by Supabase Auth with real-time session tracking.
+* **Transaction Ledger:**
+  * Categorize transactions by type (**Income** vs **Expense**), flow type (**Daily**, **Subscription**, **One-off**), and category.
+  * Edit and delete transactions in place via an accessible modal dialog.
+  * Real-time calculation of total balance.
+  * Optimistic UI updates for immediate feedback when adding or modifying records.
+* **Dynamic Currency System:** Choose between **GBP (£)**, **USD ($)**, and **EUR (€)** in your profile settings to dynamically update currency symbols across the ledger.
+* **User Profile Management:** Edit username, full name, email, phone number, and bank details with immediate persistence to Supabase.
+* **Component Architecture:** Modular React structure utilizing styled-components for isolated styling and theme management.
 
-## React Compiler
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Tech Stack
 
-## Expanding the ESLint configuration
+* **Frontend:** React (Vite), JavaScript (ES6+), styled-components
+* **Backend / Database:** Supabase (PostgreSQL, Row Level Security, Authentication)
+* **Build Tool:** Vite
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 📂 Project Structure
+
+```text
+src/
+├── components/
+│   └── UI.js                # Shared themes, design tokens, and base button styles
+├── App.jsx                  # Main application container, view routing, and auth check
+├── Auth.jsx                 # Login & Sign-up forms
+├── Ledger.jsx               # Transaction list, modal editor, and balance calculation
+├── Profile.jsx              # Profile settings and currency selector
+├── TransactionForm.jsx      # Income/Expense submission form
+├── supabaseClient.js        # Supabase client configuration
+└── main.jsx                 # Application entry point
+```
+
+## ℹ️ How to use
+
+## ⚠️ Limitations
+
