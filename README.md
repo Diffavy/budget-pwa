@@ -2,19 +2,6 @@
 
 A full-stack personal finance application built with **React**, **styled-components**, and **Supabase**. The app allows users to authenticate securely, log income and expenses across customizable categories, view real-time balance totals with dynamic multi-currency support, and manage user profile details.
 
-## 🚀 Features
-
-* **User Authentication:** Email and password sign-up/login powered by Supabase Auth with real-time session tracking.
-* **Transaction Ledger:**
-  * Categorize transactions by type (**Income** vs **Expense**), flow type (**Daily**, **Subscription**, **One-off**), and category.
-  * Edit and delete transactions in place via an accessible modal dialog.
-  * Real-time calculation of total balance.
-  * Optimistic UI updates for immediate feedback when adding or modifying records.
-* **Dynamic Currency System:** Choose between **GBP (£)**, **USD ($)**, and **EUR (€)** in your profile settings to dynamically update currency symbols across the ledger.
-* **User Profile Management:** Edit username, full name, email, phone number, and bank details with immediate persistence to Supabase.
-* **Component Architecture:** Modular React structure utilizing styled-components for isolated styling and theme management.
-
-
 ## 🛠️ Tech Stack
 
 * **Frontend:** React (Vite), JavaScript (ES6+), styled-components
@@ -36,7 +23,24 @@ src/
 └── main.jsx                 # Application entry point
 ```
 
-## ℹ️ How to use
+## 🚀 Features
 
-## ⚠️ Limitations
+* **User Authentication:** Email and password sign-up/login powered by Supabase Auth with real-time session tracking.
+* **Transaction Ledger:**
+  * Categorize transactions by type (**Income** vs **Expense**), flow type (**Daily**, **Subscription**, **One-off**), and category.
+  * Edit and delete transactions in place via an accessible modal dialog.
+  * Real-time calculation of total balance.
+  * Optimistic UI updates for immediate feedback when adding or modifying records.
+* **Dynamic Currency System:** Choose between **GBP (£)**, **USD ($)**, and **EUR (€)** in your profile settings to dynamically update currency symbols across the ledger.
+* **User Profile Management:** Edit username, full name, email, phone number, and bank details with immediate persistence to Supabase.
+* **Component Architecture:** Modular React structure utilizing styled-components for isolated styling and theme management.
 
+## ℹ️ How to run
+
+TO run this locally, download all files within the repo. Places the files in it's own directory. Open command prompt, and navigate to the directory you created for the files. Then run the command `npm install` to install all the dependencies required for this project. Following that, run the command `npm run dev` to deploy rour local host and the link will be made available on the command prompt.
+
+To use this program online, follow this [link](https://budget-pwa-cyan.vercel.app/).
+
+## ⚠️ Limitations and design decisions
+
+Currently, there is no direct link to the persons bank account due to potential security risks, therefore all transactions muse be input manually. This is an intentional decision until we can confirm all sensitive information is encrypted. There is no ability to customize categories, this is a pending change due to the current UX structure of the app.
